@@ -1,0 +1,5 @@
+/Users/osmondal/nuclearPhys/clas12_analysis/build/CMakeFiles/clas12lib.dir
+/Users/osmondal/nuclearPhys/clas12_analysis/build/CMakeFiles/clas12_analysis.dir
+/Users/osmondal/nuclearPhys/clas12_analysis/build/CMakeFiles/clas12_yields.dir
+/Users/osmondal/nuclearPhys/clas12_analysis/build/CMakeFiles/edit_cache.dir
+/Users/osmondal/nuclearPhys/clas12_analysis/build/CMakeFiles/rebuild_cache.dir
