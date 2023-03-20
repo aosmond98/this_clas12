@@ -84,6 +84,10 @@ protected:
     TH2D_ptr delta_t_hist[particle_num][charge_num][with_id_num][2];
     // Delta T
 
+    // missing mass square vs mom
+    TH2D_ptr mmsqvsmom_hist;
+    // missing mass square vs mom
+
 public:
     Histogram(const std::string &output_file);
     ~Histogram();
