@@ -65,6 +65,7 @@ protected:
 
     TH1D_ptr momentum;
     TH1D_ptr W_hist;
+    TH1D_ptr MM2_hist;
     TH1D_ptr Q2_hist;
     TH2D_ptr W_vs_q2;
 
@@ -83,10 +84,6 @@ protected:
     // Delta T
     TH2D_ptr delta_t_hist[particle_num][charge_num][with_id_num][2];
     // Delta T
-
-    // missing mass square vs mom
-    TH2D_ptr mmsqvsmom_hist;
-    // missing mass square vs mom
 
 public:
     Histogram(const std::string &output_file);
@@ -110,6 +107,12 @@ public:
 
     void Write_deltat();
     void Write();
+
+    // missing mass squared
+    void makeHists_MM2();
+    void Fill_MM2(const std::shared_ptr<Branches12> &data, int part);
+    void Write_MM2(); 
+
 };
 
 #endif

@@ -31,10 +31,13 @@ Histogram::Histogram(const std::string &output_file)
         W_hist = std::make_shared<TH1D>("W", "W", bins, zero, w_max);
         Q2_hist = std::make_shared<TH1D>("Q2", "Q2", bins, zero, q2_max);
         W_vs_q2 = std::make_shared<TH2D>("W_vs_q2", "W_vs_q2", bins, zero, w_max,
-                                         bins, zero, q2_max);
+                                         bins, zero, q2_max); 
+        MM2_hist = std::make_shared<TH1D>("MM2", "MM2", bins, -1.5, 1.5);
+
         makeHists_deltat();
         makeHists_MomVsBeta();
         makeHists_sector();
+        makeHists_MM2();
 }
 
 Histogram::~Histogram()
@@ -47,7 +50,7 @@ void Histogram::Write()
         // std::cout << GREEN << "Writting" << DEF << std::endl;
 
         // // // //  Write_EC();
-        std::cerr << BOLDBLUE << "WvsQ2()" << DEF << std::endl;
+        std::cerr << BOLDBLUE << "Write_WvsQ2()" << DEF << std::endl;
         TDirectory *WvsQ2_folder = RootOutputFile->mkdir("W vs Q2");
         WvsQ2_folder->cd();
         Write_WvsQ2();
@@ -62,6 +65,7 @@ void Histogram::Write()
         Write_deltat_folder->cd();
         Write_deltat();
 
+
         std::cerr << BOLDBLUE << "Done Writing!!!" << DEF << std::endl;
 }
 
@@ -72,6 +76,7 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e)
         short sec = _e->sec();
 
         W_hist->Fill(_e->W()), _e->weight();
+        MM2_hist->Fill(_e->MM2()), _e->weight();
         Q2_hist->Fill(_e->Q2(), _e->weight());
         W_vs_q2->Fill(_e->W(), _e->Q2(), _e->weight());
 
@@ -120,6 +125,10 @@ void Histogram::Write_WvsQ2()
         W_hist->SetXTitle("W (GeV)");
         if (W_hist->GetEntries())
                 W_hist->Write();
+
+        MM2_hist->SetXTitle("MM2 (GeV2)");
+        if (MM2_hist->GetEntries())
+                MM2_hist->Write();
 
         Q2_hist->SetXTitle("Q^{2} (GeV^{2})");
         if (Q2_hist->GetEntries())

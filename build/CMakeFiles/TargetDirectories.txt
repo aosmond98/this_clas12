@@ -1,0 +1,5 @@
+/Users/osmondal/GitHub/this_clas12/build/CMakeFiles/clas12lib.dir
+/Users/osmondal/GitHub/this_clas12/build/CMakeFiles/clas12_analysis.dir
+/Users/osmondal/GitHub/this_clas12/build/CMakeFiles/clas12_yields.dir
+/Users/osmondal/GitHub/this_clas12/build/CMakeFiles/edit_cache.dir
+/Users/osmondal/GitHub/this_clas12/build/CMakeFiles/rebuild_cache.dir

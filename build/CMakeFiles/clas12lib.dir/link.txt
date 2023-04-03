@@ -1,0 +1,2 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc libclas12lib.a CMakeFiles/clas12lib.dir/src/branches.cpp.o CMakeFiles/clas12lib.dir/src/cuts.cpp.o CMakeFiles/clas12lib.dir/src/deltat.cpp.o CMakeFiles/clas12lib.dir/src/histogram.cpp.o CMakeFiles/clas12lib.dir/src/physics.cpp.o CMakeFiles/clas12lib.dir/src/reaction.cpp.o CMakeFiles/clas12lib.dir/src/syncfile.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib libclas12lib.a
