@@ -16,12 +16,12 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 10.6;
-  if (std::is_same<CutType, rga_Cuts>::value) {
-    beam_energy = 10.6;
-  } else if (std::is_same<CutType, uconn_Cuts>::value) {
-    beam_energy = 10.6;
-  }
+  float beam_energy = 24.0;
+  // if (std::is_same<CutType, rga_Cuts>::value) {
+  //   beam_energy = 10.6;
+  // } else if (std::is_same<CutType, uconn_Cuts>::value) {
+  //   beam_energy = 10.6;
+  // }
 
   if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
@@ -30,9 +30,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
             << num_of_events << " Events " << DEF << "===============\n";
 
   // Make a data object which all the branches can be accessed from
-  // for sim data use it
+  // for sim data use it (gen)
   auto data = std::make_shared<Branches12>(_chain, true);
-  // for exp data use it
+  // for exp data use it (rec)
   // auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"

@@ -54,7 +54,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     int statusPip = -9999;
     int statusProt = -9999;
 
-    if (data->mc_npart() < 1) continue;
+    
+    // if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
     total++;
