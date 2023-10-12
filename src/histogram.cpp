@@ -75,8 +75,8 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e)
 {
         short sec = _e->sec();
 
-        W_hist->Fill(_e->W()), _e->weight();
-        MM2_hist->Fill(_e->MM2()), _e->weight();
+        W_hist->Fill(_e->W(), _e->weight());
+        MM2_hist->Fill(_e->MM2(), _e->weight());
         Q2_hist->Fill(_e->Q2(), _e->weight());
         W_vs_q2->Fill(_e->W(), _e->Q2(), _e->weight());
 
