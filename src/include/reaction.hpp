@@ -78,7 +78,7 @@ class Reaction {
     return _data->mc_weight();
     // return 1.0;
   }
-  // Check lists when you swich from mc to exp or vice-versa
+  // Check lists when you swich from mc (gen) to exp (rec) or vice-versa
   // 1. inline weight function above
   // 2. clas12_yields: auto data = std::make_shared<Branches12>(_chain, true);  turn off true for data
   // 3. from if (data->mc_npart() < 1) to all particle set up im mc events.

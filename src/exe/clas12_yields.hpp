@@ -30,9 +30,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
             << num_of_events << " Events " << DEF << "===============\n";
 
   // Make a data object which all the branches can be accessed from
-  // for sim data use it
+  // for sim data use it (gen)
   auto data = std::make_shared<Branches12>(_chain, true);
-  // for exp data use it
+  // for exp data use it (rec)
   // auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
@@ -54,8 +54,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     int statusPip = -9999;
     int statusProt = -9999;
 
-    
-    // if (data->mc_npart() < 1) continue;
+    // use for gen, comment out for rec
+    if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
     total++;
