@@ -31,9 +31,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
 
   // Make a data object which all the branches can be accessed from
   // for sim data use it (gen)
-  auto data = std::make_shared<Branches12>(_chain, true);
+  // auto data = std::make_shared<Branches12>(_chain, true);
   // for exp data use it (rec)
-  // auto data = std::make_shared<Branches12>(_chain);
+  auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
   size_t total = 0;
@@ -47,9 +47,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     // If we are the 0th thread print the progress of the thread every 1000 events
     if (thread_id == 0 && current_event % 1000 == 0)
       std::cout << "\t" << (100 * current_event / num_of_events) << " %\r" << std::flush;
-      
+
     // use for gen, comment out for rec
-    if (data->mc_npart() < 1) continue;
+    // if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
     total++;
