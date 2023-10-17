@@ -31,9 +31,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
 
   // Make a data object which all the branches can be accessed from
   // for sim data use it (gen)
-  // auto data = std::make_shared<Branches12>(_chain, true);
+  auto data = std::make_shared<Branches12>(_chain, true);
   // for exp data use it (rec)
-  auto data = std::make_shared<Branches12>(_chain);
+  // auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
   size_t total = 0;
@@ -55,7 +55,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     int statusProt = -9999;
 
     // use for gen, comment out for rec
-    // if (data->mc_npart() < 1) continue;
+    if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
     total++;
@@ -136,12 +136,12 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     // if (event->TwoPion_missingPip()) {
     // if (event->TwoPion_missingProt()) {
     if (event->TwoPion_exclusive()) {
-      if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 10.5) {
+      // if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 10.5) {
       // if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
         // if (event->W() > 1.25 && event->W() < 2.55 ) {
-        // if (mc_event->W_mc() > 1.25 && mc_event->W_mc() < 2.55 && mc_event->Q2_mc() > 1.5 && mc_event->Q2_mc() < 30.0
-        // &&
-        //     mc_event->weight() > 0.0) {
+        if (mc_event->W_mc() > 1.25 && mc_event->W_mc() < 2.55 && mc_event->Q2_mc() > 1.5 && mc_event->Q2_mc() < 30.0
+        &&
+            mc_event->weight() > 0.0) {
         total_twopion_events++;
         // && abs(event->MM2_exclusive()) < 0.03 && abs(event->Energy_excl()) < 0.3) {
         //   //&&
@@ -150,12 +150,12 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         csv_data output;
 
         // // // // // //  1) for generated
-        // output.w_mc = mc_event->W_mc();
-        // output.q2_mc = mc_event->Q2_mc();
+        output.w_mc = mc_event->W_mc();
+        output.q2_mc = mc_event->Q2_mc();
 
         // // // /// 2) reconstructed  and rec exclusive
-        output.w = event->W();
-        output.q2 = event->Q2();
+        // output.w = event->W();
+        // output.q2 = event->Q2();
         // // output.w_had = event->w_hadron();
         // output.w_diff = event->w_difference();
         // output.sf = (data->ec_tot_energy(0) / (event->elec_mom()));
@@ -166,7 +166,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // output.elec_theta_rec = (event->elec_theta());
         // output.elec_phi_rec = (event->elec_phi());
         // output.status_Elec = abs(data->status(0));
-        output.weight_rec = event->weight();
+        // output.weight_rec = event->weight();
         // output.no_of_events =
 
         // // //         // output.status_Elec =  abs(data->status(0));
@@ -237,7 +237,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // output.vertex_had[2][2] = vertex_hadron[2][2];
 
         // output.weight_gen = event->weight();
-        // output.weight_gen = mc_event->weight();
+        output.weight_gen = mc_event->weight();
 
         _sync->write(output);
       }
