@@ -30,9 +30,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
             << num_of_events << " Events " << DEF << "===============\n";
 
   // Make a data object which all the branches can be accessed from
-  // for sim data use it (gen)
+  // for sim data use it 
   auto data = std::make_shared<Branches12>(_chain, true);
-  // for exp data use it (rec)
+  // for exp data use it
   // auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
