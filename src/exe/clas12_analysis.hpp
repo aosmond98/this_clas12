@@ -13,7 +13,7 @@
 template <class CutType>
 // size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram> &_hists, int thread_id){
 size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hists, int thread_id) {
-  // Get the number of events in this thread
+  // Get the number of events in this thread 
   size_t num_of_events = (int)_chain->GetEntries();
 
   float beam_energy = 24.0;
