@@ -30,10 +30,10 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
             << num_of_events << " Events " << DEF << "===============\n";
 
   // Make a data object which all the branches can be accessed from
-  // for sim data use it (gen)
-  // auto data = std::make_shared<Branches12>(_chain, true);
-  // for exp data use it (rec)
-  auto data = std::make_shared<Branches12>(_chain);
+  // for sim data use it 
+  auto data = std::make_shared<Branches12>(_chain, true);
+  // for exp data use it 
+  // auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
   size_t total = 0;
