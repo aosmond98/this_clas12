@@ -108,10 +108,10 @@ public:
     void Write_deltat();
     void Write();
 
-    // missing mass squared
-    void makeHists_MM2();
-    void Fill_MM2(const std::shared_ptr<Branches12> &data, int part);
-    void Write_MM2(); 
+    // // missing mass squared
+    // void makeHists_MM2();
+    // void Fill_MM2(const std::shared_ptr<Branches12> &data, int part);
+    // void Write_MM2(); 
 
 };
 

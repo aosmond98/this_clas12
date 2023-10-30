@@ -37,7 +37,7 @@ Histogram::Histogram(const std::string &output_file)
         makeHists_deltat();
         makeHists_MomVsBeta();
         makeHists_sector();
-        makeHists_MM2();
+        // makeHists_MM2();
 }
 
 Histogram::~Histogram()
