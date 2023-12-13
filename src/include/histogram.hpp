@@ -8,6 +8,10 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "THnSparse.h"
+#include "TTree.h"
+#include "TBranch.h"
+#include <TChain.h>
+#include <TSystem.h>
 #include "TLegend.h"
 #include "TLorentzVector.h"
 #include "TPaveStats.h"
@@ -35,13 +39,14 @@ protected:
     std::shared_ptr<TCanvas> def;
 
     int bins = 500;
+    int W_nBins = 500;
+    int Q2_nBins = 500;
     double p_min = 0.0;
     double p_max = 20.0;
     double Dt_max = 10.0;
     double Dt_min = -Dt_max;
     double q2_max = 24.0;
     double w_max = 5.0;
-
     double zero = 0.0;
 
     static const short particle_num = 4; // 0-e 1-Pi 2-P 3-K
@@ -68,51 +73,64 @@ protected:
     TH1D_ptr MM2_hist;
     TH1D_ptr Q2_hist;
     TH2D_ptr W_vs_q2;
+    TH2D_ptr Mom_vs_MM2;
 
-    TH1D_ptr W_thrown;
-    TH2D_ptr W_vs_Q2_thrown;
+    TH2D_ptr WvsQ2_gen;
+    TH2D_ptr WvsQ2_rec;
+    // TH2D_ptr acceptance_hist;
+
+    // TH1D_ptr W_thrown;
+    // TH2D_ptr W_vs_Q2_thrown;
 
     TH2D_ptr W_vs_q2_sec[num_sectors];
+    TH2D_ptr Mom_vs_MM2_sec[num_sectors];
     TH1D_ptr W_sec[num_sectors];
+    TH1D_ptr MM2_sec[num_sectors];
 
     TH1D_ptr W_det[3];
     TH2D_ptr WQ2_det[3];
     // Mom vs Beta
     TH2D_ptr momvsbeta_hist[particle_num][charge_num][with_id_num];
-    // Mom vs Beta
 
     // Delta T
     TH2D_ptr delta_t_hist[particle_num][charge_num][with_id_num][2];
-    // Delta T
 
 public:
     Histogram(const std::string &output_file);
     ~Histogram();
 
-    // W and Q^2
-    void makeHists_sector();
-    void Fill_WvsQ2(const std::shared_ptr<Reaction> &_e);
+    // // W and Q^2
+    // void makeHists_sector();
+    // void Fill_WvsQ2(const std::shared_ptr<Reaction> &_e);
+    // void Write_WvsQ2();
+
+    // WvsQ2 to make acceptance
+    // void makeHists_WvsQ2_gen();
+    // void Fill_WvsQ2_gen(const std::shared_ptr<MCReaction> &_e);
+    // void Write_WvsQ2_gen();
+
+    // void makeHists_WvsQ2_rec();
+    // void Fill_WvsQ2_rec(const std::shared_ptr<Reaction> &_e);
+    // void Write_WvsQ2_rec();
+
+    void makeHists_WvsQ2();
+    void Fill_WvsQ2_rec(const std::shared_ptr<Reaction> &_e);
+    void Fill_WvsQ2_gen(const std::shared_ptr<MCReaction> &_e);
     void Write_WvsQ2();
 
-    void makeHists_MomVsBeta();
-    void Fill_MomVsBeta(const std::shared_ptr<Branches12> &data, int part);
-    void Write_MomVsBeta();
+    // void makeHists_MomVsBeta();
+    // void Fill_MomVsBeta(const std::shared_ptr<Branches12> &data, int part, const std::shared_ptr<Reaction> &_e);
+    // void Write_MomVsBeta();
 
-    // Delta T
-    void makeHists_deltat();
-    void Fill_deltat_pi(const std::shared_ptr<Branches12> &data,
-                        const std::shared_ptr<Delta_T> &dt, int part, const std::shared_ptr<Reaction> &_e);
-    void Fill_deltat_prot(const std::shared_ptr<Branches12> &data,
-                          const std::shared_ptr<Delta_T> &dt, int part, const std::shared_ptr<Reaction> &_e);
+    // // Delta T
+    // void makeHists_deltat();
+    // void Fill_deltat_pi(const std::shared_ptr<Branches12> &data,
+    //                     const std::shared_ptr<Delta_T> &dt, int part, const std::shared_ptr<Reaction> &_e);
+    // void Fill_deltat_prot(const std::shared_ptr<Branches12> &data,
+    //                       const std::shared_ptr<Delta_T> &dt, int part, const std::shared_ptr<Reaction> &_e);
 
-    void Write_deltat();
+    // void Write_deltat();
     void Write();
-
-    // // missing mass squared
-    // void makeHists_MM2();
-    // void Fill_MM2(const std::shared_ptr<Branches12> &data, int part);
-    // void Write_MM2(); 
-
 };
 
 #endif
