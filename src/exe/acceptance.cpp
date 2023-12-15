@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     }
 // int main() {
     // Open the ROOT file
-    TFile *WvsQ2 = new TFile("24GeV_excl_31.root", "READ");
+    TFile *WvsQ2 = new TFile("24gev_excl_12_14_2023.root", "READ");
 
     // Clone histograms
     TH2D *WvsQ2_gen = dynamic_cast<TH2D*>(WvsQ2->Get("W vs Q2/WvsQ2_gen")->Clone("WvsQ2_gen"));
