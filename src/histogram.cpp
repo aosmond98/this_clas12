@@ -240,7 +240,7 @@ void Histogram::Write_WvsQ2(){
                 WvsQ2_gen->Write();
                 // gPad->SetLogz(); // Set the color scale to logarithmic
                 // Set log scale on the Z-axis
-                WvsQ2_gen->SetLogz(true);
+                // WvsQ2_gen->SetLogz(true);
 
         WvsQ2_rec->SetXTitle("W (GeV)");
         WvsQ2_rec->SetYTitle("Q2 (GeV^{2})");
@@ -249,7 +249,7 @@ void Histogram::Write_WvsQ2(){
                 WvsQ2_rec->Write();
                 // gPad->SetLogz(); // Set the color scale to logarithmic
                 // Set log scale on the Z-axis
-                WvsQ2_rec->SetLogz(true);
+                // WvsQ2_rec->SetLogz(true);
 
 
         // acceptance_hist->SetXTitle("W (GeV)");
