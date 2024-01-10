@@ -34,14 +34,12 @@ Histogram::Histogram(const std::string &output_file)
         // W_vs_q2 = std::make_shared<TH2D>("W_vs_q2", "W_vs_q2", bins, zero, w_max,
         //                                  bins, zero, q2_max);
         // Mom_vs_MM2 = std::make_shared<TH2D>("Mom_vs_MM2", "Mom_vs_MM2", bins, p_min, 1,
-                                        //  bins, -0.04, 0.04);
+        //                                  bins, -0.04, 0.04);
         WvsQ2_gen = std::make_shared<TH2D>("WvsQ2_gen", "WvsQ2_gen", bins, zero, w_max,
                                          bins, zero, q2_max);
         WvsQ2_rec = std::make_shared<TH2D>("WvsQ2_rec", "WvsQ2_rec", bins, zero, w_max,
                                          bins, zero, q2_max);
-        // acceptance_hist = std::make_shared<TH2D>("acceptance", "acceptance", bins, zero, w_max,
-        //                                  bins, zero, q2_max);
-
+        
         // from krishna
         // TH1D *w_vs_q2_th = (TH1D *)mc_data->Get("W vs Q2/W_vs_q2_thrown");
 	// TH1D *w_vs_q2_simu = (TH1D *)mc_data->Get("W vs Q2/WQ2_det_2");
@@ -69,11 +67,6 @@ void Histogram::Write()
         WvsQ2_folder->cd();
         Write_WvsQ2();
 
-        // std::cerr << BOLDBLUE << "WvsQ2_gen()" << DEF << std::endl;
-        // TDirectory *WvsQ2_gen_folder = RootOutputFile->mkdir("W vs Q2 gen");
-        // WvsQ2_gen_folder->cd();
-        // Write_WvsQ2_gen();
-
         // std::cerr << BOLDBLUE << "Write_MomVsBeta()" << DEF << std::endl;
         // TDirectory *Write_MomVsBeta_folder = RootOutputFile->mkdir("Mom Vs Beta");
         // Write_MomVsBeta_folder->cd();
@@ -84,7 +77,7 @@ void Histogram::Write()
         // Write_deltat_folder->cd();
         // Write_deltat();
 
-        std::cerr << BOLDBLUE << "Done Writing!!" << DEF << std::endl;
+        // std::cerr << BOLDBLUE << "Done Writing!!" << DEF << std::endl;
 }
 
 void Histogram::Fill_WvsQ2_rec(const std::shared_ptr<Reaction> &_e)
