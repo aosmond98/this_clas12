@@ -31,9 +31,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
 
   // Make a data object which all the branches can be accessed from
   // for sim data use 
-  auto data = std::make_shared<Branches12>(_chain, true);
+  // auto data = std::make_shared<Branches12>(_chain, true);
   // for exp data use 
-  // auto data = std::make_shared<Branches12>(_chain);
+  auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
   size_t total = 0;
@@ -49,7 +49,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
       std::cout << "\t" << (100 * current_event / num_of_events) << " %\r" << std::flush;
 
       // use for mc, comment out for exp??
-    if (data->mc_npart() < 1) continue;
+    // if (data->mc_npart() < 1) continue;
 
     // If we pass electron cuts the event is processed
     total++;
@@ -117,8 +117,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     if (event->TwoPion_exclusive()) {
     // //   if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 10.5) {
       // comment out for exp
-      if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
-        _hists->Fill_WvsQ2_rec(event);
+      // if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
+      //   _hists->Fill_WvsQ2_rec(event);
         total_twopion_events++;
       }
     }
