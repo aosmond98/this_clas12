@@ -133,7 +133,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     // _hists->Fill_WvsQ2_rec(event);
     // _hists->Fill_WvsQ2_gen(mc_event);
   // }
-  }
+  // }
   std::cout << "Percent = " << 100.0 * total / num_of_events << std::endl;
   // Return the total number of events
   std::cout << " total no of events = " << total << std::endl;
