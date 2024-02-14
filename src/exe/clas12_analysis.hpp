@@ -57,26 +57,26 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     // auto dt = std::make_shared<Delta_T>(data);
     // auto cuts = std::make_shared<uconn_Cuts>(data);
 
-    // Make a reaction class from the data given
-    auto mc_event = std::make_shared<MCReaction>(data, beam_energy);
+    // // Make a reaction class from the data given
+    // auto mc_event = std::make_shared<MCReaction>(data, beam_energy);
 
-    for (int part = 1; part < data->mc_npart(); part++) {
+    // for (int part = 1; part < data->mc_npart(); part++) {
       
-      // Check particle ID's and fill the reaction class
-      if (data->mc_pid(part) == PIP) {
-        mc_event->SetMCPip(part);
+    //   // Check particle ID's and fill the reaction class
+    //   if (data->mc_pid(part) == PIP) {
+    //     mc_event->SetMCPip(part);
 
-      } else if (data->mc_pid(part) == PROTON) {
-        mc_event->SetMCProton(part);
+    //   } else if (data->mc_pid(part) == PROTON) {
+    //     mc_event->SetMCProton(part);
 
-      } else if (data->mc_pid(part) == PIM) {
-        mc_event->SetMCPim(part);
+    //   } else if (data->mc_pid(part) == PIM) {
+    //     mc_event->SetMCPim(part);
 
-      // } else {
-      //   mc_event->SetMCOther(part);
-      }
-    }
-    _hists->Fill_WvsQ2_gen(mc_event);
+    //   // } else {
+    //   //   mc_event->SetMCOther(part);
+    //   }
+    // }
+    // _hists->Fill_WvsQ2_gen(mc_event);
 
     auto dt = std::make_shared<Delta_T>(data);
     auto cuts = std::make_shared<uconn_Cuts>(data);
