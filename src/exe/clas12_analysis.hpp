@@ -115,12 +115,12 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     // if (event->TwoPion_missingPip()) {
     // if (event->TwoPion_missingProt()) {
     if (event->TwoPion_exclusive()) {
-    // //   if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 10.5) {
-      // comment out for exp
-      // if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
-      //   _hists->Fill_WvsQ2_rec(event);
+    // // //   if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 10.5) {
+    //   // comment out for exp
+    //   // if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
+        _hists->Fill_WvsQ2_rec(event);
         total_twopion_events++;
-      }
+      // }
     }
     // not needed above or below, these if loops dont do anything (currently)
     // if (mc_event->TwoPion_exclusive()){
