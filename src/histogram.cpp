@@ -34,7 +34,7 @@ Histogram::Histogram(const std::string &output_file)
         WvsQ2 = std::make_shared<TH2D>("WvsQ2", "WvsQ2", bins, zero, w_max,
                                          bins, zero, q2_max);
         MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, -0.04, 0.04);
-        W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, p_min, 1,
+        W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
                                          bins, -0.04, 0.04);
 
         W_mc = std::make_shared<TH1D>("W_mc", "W_mc", bins, zero, w_max);
@@ -42,7 +42,7 @@ Histogram::Histogram(const std::string &output_file)
         WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, zero, w_max,
                                          bins, zero, q2_max);
         MM2_mc = std::make_shared<TH1D>("MM2_mc", "MM2_mc", bins, -0.04, 0.04);
-        W_vs_MM2_mc = std::make_shared<TH2D>("W_vs_MM2_mc", "W_vs_MM2_mc", bins, p_min, 1,
+        W_vs_MM2_mc = std::make_shared<TH2D>("W_vs_MM2_mc", "W_vs_MM2_mc", bins, zero, w_max,
                                          bins, -0.04, 0.04);
         
         // from krishna
@@ -248,7 +248,7 @@ void Histogram::Write_WvsMM2()
                 MM2->Write(); 
 
         W_vs_MM2->SetYTitle("MM^{2} (GeV^{2})");
-        W_vs_MM2->SetXTitle("Mom (GeV)");
+        W_vs_MM2->SetXTitle("W (GeV)");
         // W_vs_MM2->SetOption("COLZ1");
         if (W_vs_MM2->GetEntries())
                 W_vs_MM2->Write();  
@@ -258,7 +258,7 @@ void Histogram::Write_WvsMM2()
                 MM2_mc->Write();        
 
         W_vs_MM2_mc->SetYTitle("MM^{2} (GeV^{2})");
-        W_vs_MM2_mc->SetXTitle("Mom (GeV)");
+        W_vs_MM2_mc->SetXTitle("W (GeV)");
         // W_vs_MM2->SetOption("COLZ1");
         if (W_vs_MM2_mc->GetEntries())
                 W_vs_MM2_mc->Write();
