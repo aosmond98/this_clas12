@@ -24,6 +24,7 @@
 #include "deltat.hpp"
 #include "reaction.hpp"
 #include <mutex>
+#include <TDirectory.h>
 
 using namespace std;
 
@@ -38,8 +39,8 @@ protected:
     std::shared_ptr<TFile> RootOutputFile;
     std::shared_ptr<TCanvas> def;
 
-    std::shared_ptr<TDirectory> WvsQ2_rec_folder;
-    std::shared_ptr<TDirectory> WvsQ2_gen_folder;
+    std::shared_ptr<TDirectory> WvsQ2_folder;
+    std::shared_ptr<TDirectory> WvsQ2_mc_folder;
     // TDirectory *WvsQ2_rec_folder;
     // TDirectory *WvsQ2_gen_folder;
 
@@ -71,34 +72,29 @@ protected:
     };
     std::mutex mutex;
 
-
     TH1D_ptr momentum;
 
-    TH1D_ptr W_rec;
-    TH1D_ptr Q2_rec;
-    TH1D_ptr MM2_rec;
-    TH2D_ptr Mom_vs_MM2_rec;
+    TH1D_ptr W;
+    TH1D_ptr Q2;
+    TH2D_ptr WvsQ2;
+    TH1D_ptr MM2;
+    TH2D_ptr W_vs_MM2;
 
-    TH1D_ptr W_gen;
-    TH1D_ptr Q2_gen;
-    // TH1D_ptr MM2_gen;
-    // TH2D_ptr Mom_vs_MM2_gen;
+    TH1D_ptr W_mc;
+    TH1D_ptr Q2_mc;
+    TH2D_ptr WvsQ2_mc;
+    TH1D_ptr MM2_mc;
+    TH2D_ptr W_vs_MM2_mc;
 
-    TH2D_ptr WvsQ2_rec;
-    TH2D_ptr WvsQ2_gen;
+    TH1D_ptr W_sec[num_sectors];
+    TH2D_ptr WvsQ2_sec[num_sectors];
+    TH1D_ptr MM2_sec[num_sectors];
+    TH2D_ptr W_vs_MM2_sec[num_sectors];
 
-    // TH1D_ptr W_thrown;
-    // TH2D_ptr W_vs_Q2_thrown;
-
-    TH2D_ptr WvsQ2_rec_sec[num_sectors];
-    TH2D_ptr Mom_vs_MM2_rec_sec[num_sectors];
-    TH1D_ptr W_rec_sec[num_sectors];
-    TH1D_ptr MM2_rec_sec[num_sectors];
-
-    TH2D_ptr WvsQ2_gen_sec[num_sectors];
-    // TH2D_ptr Mom_vs_MM2_gen_sec[num_sectors];
-    TH1D_ptr W_gen_sec[num_sectors];
-    // TH1D_ptr MM2_gen_sec[num_sectors];
+    TH1D_ptr W_mc_sec[num_sectors];
+    TH2D_ptr WvsQ2_mc_sec[num_sectors];
+    TH1D_ptr MM2_mc_sec[num_sectors];
+    TH2D_ptr W_vs_MM2_mc_sec[num_sectors];
 
     // TH1D_ptr W_det[3];
     // TH2D_ptr WQ2_det[3];
@@ -113,15 +109,20 @@ public:
     Histogram(const std::string &output_file);
     ~Histogram();
 
-    // // W and Q^2
+    // sectors
     void makeHists_sector();
 
     // W vs Q2
     void makeHists_WvsQ2();
-    void Fill_WvsQ2_rec(const std::shared_ptr<Reaction> &_e);
-    void Fill_WvsQ2_gen(const std::shared_ptr<MCReaction> &_e);
+    void Fill_WvsQ2(const std::shared_ptr<Reaction> &_e);
+    void Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e);
     void Write_WvsQ2();
-    // void Write_WvsQ2(TDirectory *WvsQ2_folder);
+
+    // W vs MM2
+    void makeHists_WvsMM2();
+    void Fill_WvsMM2(const std::shared_ptr<Reaction> &_e);
+    void Fill_WvsMM2_mc(const std::shared_ptr<MCReaction> &_e);
+    void Write_WvsMM2();
 
     // Mom vs Beta
     void makeHists_MomVsBeta();
@@ -134,8 +135,8 @@ public:
                         const std::shared_ptr<Delta_T> &dt, int part, const std::shared_ptr<Reaction> &_e);
     void Fill_deltat_prot(const std::shared_ptr<Branches12> &data,
                           const std::shared_ptr<Delta_T> &dt, int part, const std::shared_ptr<Reaction> &_e);
-
-    void Write_deltat();
+    void Write_deltat(TDirectory *ctof_folder, TDirectory *ftof_folder, TDirectory *Write_deltat_folder);
+    
     void Write();
 };
 

@@ -74,7 +74,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
       //   mc_event->SetMCOther(part);
       }
     }
-    _hists->Fill_WvsQ2_gen(mc_event);
+    _hists->Fill_WvsQ2_mc(mc_event);
 
     auto dt = std::make_shared<Delta_T>(data);
     auto cuts = std::make_shared<uconn_Cuts>(data);
@@ -115,7 +115,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     if (event->TwoPion_exclusive()) {
     // //   if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 10.5) {
       if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
-        _hists->Fill_WvsQ2_rec(event);
+        _hists->Fill_WvsQ2(event);
         total_twopion_events++;
       }
     }
