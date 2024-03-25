@@ -1,5 +1,6 @@
 
 #include "histogram.hpp"
+#include <TRandom.h> 
 
 Histogram::Histogram(const std::string &output_file)
 {
@@ -33,6 +34,7 @@ Histogram::Histogram(const std::string &output_file)
         Q2 = std::make_shared<TH1D>("Q2", "Q2", bins, zero, q2_max);
         WvsQ2 = std::make_shared<TH2D>("WvsQ2", "WvsQ2", bins, zero, w_max,
                                          bins, zero, q2_max);
+
         MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, -0.04, 0.04);
         W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
                                          bins, -0.04, 0.04);
@@ -41,9 +43,6 @@ Histogram::Histogram(const std::string &output_file)
         Q2_mc = std::make_shared<TH1D>("Q2_mc", "Q2_mc", bins, zero, q2_max);
         WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, zero, w_max,
                                          bins, zero, q2_max);
-        MM2_mc = std::make_shared<TH1D>("MM2_mc", "MM2_mc", bins, -0.04, 0.04);
-        W_vs_MM2_mc = std::make_shared<TH2D>("W_vs_MM2_mc", "W_vs_MM2_mc", bins, zero, w_max,
-                                         bins, -0.04, 0.04);
         
         // from krishna
         // TH1D *w_vs_q2_th = (TH1D *)mc_data->Get("W vs Q2/W_vs_q2_thrown");
@@ -53,8 +52,9 @@ Histogram::Histogram(const std::string &output_file)
 
         makeHists_deltat();
         makeHists_MomVsBeta();
+        makeHists_MomVsQ2();
         makeHists_sector();
-        // makeHists_WvsQ2();
+        makeHists_MM2withbins();
 }
 
 Histogram::~Histogram()
@@ -72,15 +72,25 @@ void Histogram::Write()
         Write_WvsQ2_folder->cd();
         Write_WvsQ2();
 
-        std::cerr << BOLDBLUE << "Write_WvsMM2()" << DEF << std::endl;
-        TDirectory *Write_WvsMM2_folder = RootOutputFile->mkdir("W vs MM2");
-        Write_WvsMM2_folder->cd();
-        Write_WvsMM2();
+        std::cerr << BOLDBLUE << "Write_MM2()" << DEF << std::endl;
+        TDirectory *Write_MM2_folder = RootOutputFile->mkdir("MM2");
+        Write_MM2_folder->cd();
+        Write_MM2();
 
         std::cerr << BOLDBLUE << "Write_MomVsBeta()" << DEF << std::endl;
         TDirectory *Write_MomVsBeta_folder = RootOutputFile->mkdir("Mom Vs Beta");
         Write_MomVsBeta_folder->cd();
         Write_MomVsBeta();
+
+        std::cerr << BOLDBLUE << "Write_MomVsQ2()" << DEF << std::endl;
+        TDirectory *Write_MomVsQ2_folder = RootOutputFile->mkdir("Mom Vs Q2");
+        Write_MomVsQ2_folder->cd();
+        Write_MomVsQ2();
+
+        std::cerr << BOLDBLUE << "Write_MM2withbins()" << DEF << std::endl;
+        TDirectory *Write_MM2_withbins_folder = RootOutputFile->mkdir("MM2 with bins");
+        Write_MM2_withbins_folder->cd();
+        Write_MM2withbins(Write_MM2_withbins_folder);
 
         std::cerr << BOLDBLUE << "Write_deltat()" << DEF << std::endl;
         TDirectory *Write_deltat_folder = RootOutputFile->mkdir("Delta_t");
@@ -97,16 +107,12 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e)
         W->Fill(_e->W(), _e->weight());
         Q2->Fill(_e->Q2(), _e->weight());
         WvsQ2->Fill(_e->W(), _e->Q2(), _e->weight());
-        MM2->Fill(_e->MM2_exclusive(), _e->weight());
-        W_vs_MM2->Fill(_e->W(), _e->MM2_exclusive(), _e->weight());
 
         short sec = _e->sec();
         if (sec > 0 && sec <= 6)
         {
                 W_sec[sec - 1]->Fill(_e->W(), _e->weight());
                 WvsQ2_sec[sec - 1]->Fill(_e->W(), _e->Q2(), _e->weight());
-                MM2_sec[sec - 1]->Fill(_e->MM2_exclusive(), _e->weight());
-                W_vs_MM2_sec[sec - 1]->Fill(_e->W(), _e->MM2_exclusive(), _e->weight());
         }
 }
 
@@ -115,16 +121,12 @@ void Histogram::Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e)
         W_mc->Fill(_e->W_mc(), _e->weight());
         Q2_mc->Fill(_e->Q2_mc(), _e->weight());
         WvsQ2_mc->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
-        MM2_mc->Fill(_e->MM2_exclusive(), _e->weight());
-        W_vs_MM2_mc->Fill(_e->W_mc(), _e->MM2_exclusive(), _e->weight());
-
+        
         short sec = _e->sec();
         if (sec > 0 && sec <= 6)
         {
                 W_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->weight());
                 WvsQ2_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
-                MM2_mc_sec[sec - 1]->Fill(_e->MM2_exclusive(), _e->weight());
-                W_vs_MM2_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->MM2_exclusive(), _e->weight());
         }
 }
 
@@ -138,7 +140,6 @@ void Histogram::Write_WvsQ2()
         if (Q2->GetEntries())
                 Q2->Write();
 
-        // auto WvsQ2rec_can = std::make_unique<TCanvas>("WvsQ2_rec", "WvsQ2_rec log scale", 1920, 1080);
         WvsQ2->SetXTitle("W (GeV)");
         WvsQ2->SetYTitle("Q2 (GeV^{2})");
         WvsQ2->SetOption("COLZ1");
@@ -215,7 +216,7 @@ void Histogram::Write_WvsQ2()
         WvsQ2_mc_can->Write();
 }
 
-void Histogram::Fill_WvsMM2(const std::shared_ptr<Reaction> &_e)
+void Histogram::Fill_MM2(const std::shared_ptr<Reaction> &_e)
 {
         MM2->Fill(_e->MM2_exclusive(), _e->weight());
         W_vs_MM2->Fill(_e->W(), _e->MM2_exclusive(), _e->weight());
@@ -228,20 +229,7 @@ void Histogram::Fill_WvsMM2(const std::shared_ptr<Reaction> &_e)
         }
 }
 
-void Histogram::Fill_WvsMM2_mc(const std::shared_ptr<MCReaction> &_e)
-{
-        MM2_mc->Fill(_e->MM2_exclusive(), _e->weight());
-        W_vs_MM2_mc->Fill(_e->W_mc(), _e->MM2_exclusive(), _e->weight());
-
-        short sec = _e->sec();
-        if (sec > 0 && sec <= 6)
-        {
-                MM2_mc_sec[sec - 1]->Fill(_e->MM2_exclusive(), _e->weight());
-                W_vs_MM2_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->MM2_exclusive(), _e->weight());
-        }
-}
-
-void Histogram::Write_WvsMM2()
+void Histogram::Write_MM2()
 {
         MM2->SetXTitle("MM2 (GeV2)");
         if (MM2->GetEntries())
@@ -252,16 +240,6 @@ void Histogram::Write_WvsMM2()
         // W_vs_MM2->SetOption("COLZ1");
         if (W_vs_MM2->GetEntries())
                 W_vs_MM2->Write();  
-
-        MM2_mc->SetXTitle("MM2 (GeV2)");
-        if (MM2_mc->GetEntries())
-                MM2_mc->Write();        
-
-        W_vs_MM2_mc->SetYTitle("MM^{2} (GeV^{2})");
-        W_vs_MM2_mc->SetXTitle("W (GeV)");
-        // W_vs_MM2->SetOption("COLZ1");
-        if (W_vs_MM2_mc->GetEntries())
-                W_vs_MM2_mc->Write();
 
         auto MM2_can = std::make_unique<TCanvas>("MM2_can", "MM2 sectors", 1920, 1080);
         MM2_can->Divide(3, 2);
@@ -286,69 +264,69 @@ void Histogram::Write_WvsMM2()
                 W_vs_MM2_sec[i]->Draw("same");
         }
         WvsMM2_can->Write();
-
-        auto MM2_mc_can = std::make_unique<TCanvas>("MM2_mc_can", "MM2_mc sectors", 1920, 1080);
-        MM2_mc_can->Divide(3, 2);
-        for (short i = 0; i < num_sectors; i++)
-        {
-                MM2_mc_sec[i]->SetXTitle("MM2 (GeV)");
-                MM2_mc_can->cd(i + 1);
-                MM2_mc_sec[i]->Draw("same");
-        }
-        MM2_mc_can->Write();
-
-        auto WvsMM2_mc_can =
-            std::make_unique<TCanvas>("WvsMM2_mc_can", "W vs MM2 mc sectors", 1920, 1080);
-        WvsMM2_mc_can->Divide(3, 2);
-        for (short i = 0; i < num_sectors; i++)
-        {
-                W_vs_MM2_mc_sec[i]->SetYTitle("MM^{2} (GeV^{2})");
-                W_vs_MM2_mc_sec[i]->SetXTitle("W (GeV)");
-                W_vs_MM2_mc_sec[i]->SetOption("COLZ1");
-                WvsMM2_mc_can->cd(i + 1);
-                gPad->SetLogz();
-                W_vs_MM2_mc_sec[i]->Draw("same");
-        }
-        WvsMM2_mc_can->Write();
 }
 
-// void Histogram::Fill_WvsQ2(const std::shared_ptr<MCReaction> &_e_mc, const std::shared_ptr<Reaction> &_e){
-// void Histogram::Fill_WvsQ2_gen(mc_event){
-        // for (int i=0; i < W_nBins; i++){
-        //         for (int j=0; j < Q2_nBins; j++){
-                        // WvsQ2_gen[i][j] = data->Get<TH2D>("WvsQ2_gen/WvsQ2_gen");
-                        // WvsQ2_gen[i][j] = (TH2D*)data->Get("WvsQ2_gen/WvsQ2_gen")
-                        // WvsQ2_gen->Fill(_e->W_mc[i], _e->Q2_mc[j]);
-                        // WvsQ2_gen->Fill(w_val(i), q2_val(j));
-                        // WvsQ2_gen->Fill(_e_mc->W_mc(), _e_mc->Q2_mc(), _e_mc->weight());
-                        // WvsQ2_rec->Fill(_e->W(), _e->Q2(), _e->weight());
+void Histogram::makeHists_MM2withbins() {
+        MM2_hists.resize(w_nBins);
+        for (int w_bin = 0; w_bin < w_nBins; ++w_bin) 
+        {
+                MM2_hists[w_bin].resize(q2_nBins);
+                for (int q2_bin = 0; q2_bin < q2_nBins; ++q2_bin) 
+                {
+                        std::string hist_name = "MM2_W_" + std::to_string(w_bin_ranges[w_bin]) +
+                                                "_to_" + std::to_string(w_bin_ranges[w_bin + 1]) +
+                                                "_Q2_" + std::to_string(q2_bin_ranges[q2_bin]) +
+                                                "_to_" + std::to_string(q2_bin_ranges[q2_bin + 1]);
 
-                        // if (WvsQ2_gen->GetEntries() > 0 && WvsQ2_rec->GetEntries() > 0) {
-                        //         if (WvsQ2_rec->GetNbinsX() == WvsQ2_gen->GetNbinsX() &&
-                        //                 WvsQ2_rec->GetNbinsY() == WvsQ2_gen->GetNbinsY()) {
-                        //                 TH2D *acceptance_hist = static_cast<TH2D*>(WvsQ2_rec->Clone("acceptance_hist"));
-                        //                 acceptance_hist->Divide(WvsQ2_gen.get());
-                        //         } else {
-                        //                 std::cerr << "Error: Dimensions of WvsQ2_rec and WvsQ2_gen do not match." << std::endl;
-                        //         }
-                        // } else {
-                        //         std::cerr << "Error: Empty histograms. Cannot perform division." << std::endl;
-                        // }
-        //         }
-        // }
-// }
+                        MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, -0.04, 0.04);
+                }
+        }
+}
 
-// void Histogram::Fill_WvsQ2_rec(const std::shared_ptr<Reaction> &_e){
-// // void Histogram::Fill_WvsQ2_rec(event){
-//         // for (int i=0; i < W_nBins; i++){
-//         //         for (int j=0; j < Q2_nBins; j++){
-//                         // WvsQ2_rec->Fill(_e->W[i], _e->Q2[j]);
-//                         // WvsQ2_rec->Fill(w_val(i), q2_val(j));
-//                         // WvsQ2_rec->Fill(_e->W(), _e->Q2(), _e->weight());
+void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
+{
+        double w_val = _e->W();
+        double q2_val = _e->Q2();
+        double mm2_val = _e->MM2_exclusive();
 
-//         //         }
-//         // }
-// }
+        for (int w_bin = 0; w_bin < w_nBins; ++w_bin)
+        {
+                for (int q2_bin = 0; q2_bin < q2_nBins; ++q2_bin)
+                {
+                        double w_min = w_bin_ranges[w_bin];
+                        double w_max = w_bin_ranges[w_bin + 1];
+                        double q2_min = q2_bin_ranges[q2_bin];
+                        double q2_max = q2_bin_ranges[q2_bin + 1];
+
+                        // put w and q2 data values in bin ranges for plotting purposes
+                        if (w_val >= w_min && w_val < w_max && q2_val >= q2_min && q2_val < q2_max)
+                        {
+                                if (w_bin < MM2_hists.size() && q2_bin < MM2_hists[w_bin].size()) {
+                                        MM2_hists[w_bin][q2_bin]->Fill(mm2_val, _e->weight());
+                                }
+                        }
+                }
+        }        
+}
+
+void Histogram::Write_MM2withbins(TDirectory *Write_MM2_withbins_folder) {
+        for (int w_bin = 0; w_bin < w_nBins; ++w_bin) 
+        {
+                // Create a folder for each w range
+                std::stringstream folder_name;
+                folder_name << "W_" << std::fixed << std::setprecision(3) << w_bin_ranges[w_bin]
+                        << "_to_" << std::fixed << std::setprecision(3) << w_bin_ranges[w_bin + 1];
+                TDirectory *w_bin_folder = Write_MM2_withbins_folder->mkdir(folder_name.str().c_str());
+                w_bin_folder->cd();
+
+                for (int q2_bin = 0; q2_bin < q2_nBins; ++q2_bin) 
+                {
+                        if (MM2_hists[w_bin][q2_bin] && MM2_hists[w_bin][q2_bin]->GetEntries()) 
+                                MM2_hists[w_bin][q2_bin]->GetXaxis()->SetTitle("MM2 (GeV^2)");
+                                MM2_hists[w_bin][q2_bin]->Write();
+                }
+        }
+}
 
 void Histogram::makeHists_sector()
 {
@@ -378,13 +356,13 @@ void Histogram::makeHists_sector()
                     Form("wvsq2_mc_sec_%d", i + 1), Form("W vs Q^{2} mc Sector: %d", i + 1), bins,
                     zero, w_max, bins, zero, q2_max);
 
-                MM2_mc_sec[i] =
-                    std::make_shared<TH1D>(Form("mm2_mc_sec_%d", i + 1),
-                                           Form("MM2_mc Sector: %d", i + 1), bins, -0.04, 0.04);
+                // MM2_mc_sec[i] =
+                //     std::make_shared<TH1D>(Form("mm2_mc_sec_%d", i + 1),
+                //                            Form("MM2_mc Sector: %d", i + 1), bins, -0.04, 0.04);
 
-                W_vs_MM2_mc_sec[i] = std::make_shared<TH2D>(
-                    Form("WvsMM2_mc_sec_%d", i + 1), Form("W vs MM^{2} mc Sector: %d", i + 1), bins,
-                    p_min, 1, bins, -0.04, 0.04);
+                // W_vs_MM2_mc_sec[i] = std::make_shared<TH2D>(
+                //     Form("WvsMM2_mc_sec_%d", i + 1), Form("W vs MM^{2} mc Sector: %d", i + 1), bins,
+                //     p_min, 1, bins, -0.04, 0.04);
         }
 }
 
@@ -657,6 +635,106 @@ void Histogram::Write_MomVsBeta()
                                 momvsbeta_hist[p][c][i]->SetOption("COLZ1");
                                 gPad->SetLogz();
                                 momvsbeta_hist[p][c][i]->Write();
+                        }
+                }
+        }
+}
+
+void Histogram::makeHists_MomVsQ2()
+{
+        for (short p = 0; p < particle_num; p++)
+        {
+                for (short c = 0; c < charge_num; c++)
+                {
+                        for (short i = 0; i < with_id_num; i++)
+                        {
+                                Mom_vs_Q2_hist[p][c][i] = std::make_shared<TH2D>(
+                                    Form("Mom_vs_Q2_%s_%s_%s", particle_name[p].c_str(),
+                                         charge_name[c].c_str(), id_name[i].c_str()),
+                                    Form("Momentum vs Q2 %s %s %s", particle_name[p].c_str(),
+                                         charge_name[c].c_str(), id_name[i].c_str()),
+                                    bins, p_min, p_max, bins, zero, q2_max);
+                        }
+                }
+        }
+}
+
+void Histogram::Fill_MomVsQ2(const std::shared_ptr<Branches12> &data, int part, const std::shared_ptr<Reaction> &_e)
+{
+        int good_ID = 0;
+        // float Q2 = data->Q2(part);
+        float mom = data->p(part);
+        int charge = data->charge(part);
+        int pid = data->pid(part);
+        if (_e->Q2() != 0)
+        {
+                momentum->Fill(mom);
+                for (short p = 0; p < particle_num; p++)
+                {
+                        switch (p)
+                        {
+                        case 0:
+                                good_ID = ELECTRON;
+                                break;
+                        case 1:
+                                good_ID = PIP;
+                                break;
+                        case 2:
+                                good_ID = PROTON;
+                                break;
+                        case 3:
+                                good_ID = KP;
+                                break;
+                         }
+                         
+                        Mom_vs_Q2_hist[p][0][0]->Fill(mom, _e->Q2(), _e->weight());
+
+                        if (good_ID == pid)
+                        {
+                                Mom_vs_Q2_hist[p][0][1]->Fill(mom, _e->Q2(), _e->weight());
+                        }
+                        else
+                        {
+                                Mom_vs_Q2_hist[p][0][2]->Fill(mom, _e->Q2(), _e->weight());
+                        }
+
+                        if (charge == -1)
+                        {
+
+                                Mom_vs_Q2_hist[p][1][0]->Fill(mom, _e->Q2(), _e->weight());
+                                // if (good_ID == 11)
+                                if (-good_ID == pid)
+                                        Mom_vs_Q2_hist[p][1][1]->Fill(mom, _e->Q2(), _e->weight());
+                                else // if (-good_ID == pid)
+                                        Mom_vs_Q2_hist[p][1][2]->Fill(mom, _e->Q2(), _e->weight());     
+                        }
+                        else if (charge == 1)
+                        {
+                                Mom_vs_Q2_hist[p][0][0]->Fill(mom, _e->Q2(), _e->weight());
+                                if (good_ID == pid)
+                                        Mom_vs_Q2_hist[p][0][1]->Fill(mom, _e->Q2(), _e->weight());
+                                else  // if (-good_ID == pid)
+                                        Mom_vs_Q2_hist[p][0][2]->Fill(mom, _e->Q2(), _e->weight());       
+                        }       
+                }
+        }
+}
+
+void Histogram::Write_MomVsQ2()
+{
+        momentum->SetXTitle("Momentum (GeV)");
+        momentum->Write();
+        for (short p = 0; p < particle_num; p++)
+        {
+                for (short c = 0; c < charge_num; c++)
+                {
+                        for (short i = 0; i < with_id_num; i++)
+                        {
+                                Mom_vs_Q2_hist[p][c][i]->SetXTitle("Momentum (GeV)");
+                                Mom_vs_Q2_hist[p][c][i]->SetYTitle("Q2");
+                                Mom_vs_Q2_hist[p][c][i]->SetOption("COLZ1");
+                                gPad->SetLogz();
+                                Mom_vs_Q2_hist[p][c][i]->Write();
                         }
                 }
         }
