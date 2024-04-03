@@ -87,10 +87,10 @@ void Histogram::Write()
         Write_MomVsQ2_folder->cd();
         Write_MomVsQ2();
 
-        std::cerr << BOLDBLUE << "Write_MM2withbins()" << DEF << std::endl;
-        TDirectory *Write_MM2_withbins_folder = RootOutputFile->mkdir("MM2 with bins");
-        Write_MM2_withbins_folder->cd();
-        Write_MM2withbins(Write_MM2_withbins_folder);
+        // std::cerr << BOLDBLUE << "Write_MM2withbins()" << DEF << std::endl;
+        // TDirectory *Write_MM2_withbins_folder = RootOutputFile->mkdir("MM2 with bins");
+        // Write_MM2_withbins_folder->cd();
+        // Write_MM2withbins(Write_MM2_withbins_folder);
 
         std::cerr << BOLDBLUE << "Write_deltat()" << DEF << std::endl;
         TDirectory *Write_deltat_folder = RootOutputFile->mkdir("Delta_t");
