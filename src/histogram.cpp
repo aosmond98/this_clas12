@@ -87,10 +87,10 @@ void Histogram::Write()
         Write_MomVsQ2_folder->cd();
         Write_MomVsQ2();
 
-        // std::cerr << BOLDBLUE << "Write_MM2withbins()" << DEF << std::endl;
-        // TDirectory *Write_MM2_withbins_folder = RootOutputFile->mkdir("MM2 with bins");
-        // Write_MM2_withbins_folder->cd();
-        // Write_MM2withbins(Write_MM2_withbins_folder);
+        std::cerr << BOLDBLUE << "Write_MM2withbins()" << DEF << std::endl;
+        TDirectory *Write_MM2_withbins_folder = RootOutputFile->mkdir("MM2 with bins");
+        Write_MM2_withbins_folder->cd();
+        Write_MM2withbins(Write_MM2_withbins_folder);
 
         std::cerr << BOLDBLUE << "Write_deltat()" << DEF << std::endl;
         TDirectory *Write_deltat_folder = RootOutputFile->mkdir("Delta_t");
@@ -287,7 +287,7 @@ void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
 {
         double w_val = _e->W();
         double q2_val = _e->Q2();
-        double mm2_val = _e->MM2_exclusive();
+        double mm2_val = _e->MM2_mProt();
 
         for (int w_bin = 0; w_bin < w_nBins; ++w_bin)
         {
