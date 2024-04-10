@@ -218,14 +218,14 @@ void Histogram::Write_WvsQ2()
 
 void Histogram::Fill_MM2(const std::shared_ptr<Reaction> &_e)
 {
-        MM2->Fill(_e->MM2_exclusive(), _e->weight());
-        W_vs_MM2->Fill(_e->W(), _e->MM2_exclusive(), _e->weight());
+        MM2->Fill(_e->MM2_mProt(), _e->weight());
+        W_vs_MM2->Fill(_e->W(), _e->MM2_mProt(), _e->weight());
 
         short sec = _e->sec();
         if (sec > 0 && sec <= 6)
         {
-                MM2_sec[sec - 1]->Fill(_e->MM2_exclusive(), _e->weight());
-                W_vs_MM2_sec[sec - 1]->Fill(_e->W(), _e->MM2_exclusive(), _e->weight());
+                MM2_sec[sec - 1]->Fill(_e->MM2_mProt(), _e->weight());
+                W_vs_MM2_sec[sec - 1]->Fill(_e->W(), _e->MM2_mProt(), _e->weight());
         }
 }
 
