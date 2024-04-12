@@ -35,7 +35,7 @@ Histogram::Histogram(const std::string &output_file)
         WvsQ2 = std::make_shared<TH2D>("WvsQ2", "WvsQ2", bins, zero, w_max,
                                          bins, zero, q2_max);
 
-        MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, -0.04, 0.04);
+        MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, 0.4, 1.4);
         W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
                                          bins, -0.04, 0.04);
 
@@ -274,67 +274,32 @@ void Histogram::makeHists_MM2withbins()
                 MM2_hists[w_bin].resize(q2_nBins);
                 for (int q2_bin = 0; q2_bin < q2_nBins - 1; ++q2_bin) 
                 {
-                        std::string hist_name = "MM2_W_" + std::to_string(w_bin_ranges[w_bin]) +
-                                                "_to_" + std::to_string(w_bin_ranges[w_bin + 1]) +
-                                                "_Q2_" + std::to_string(q2_bin_ranges[q2_bin]) +
-                                                "_to_" + std::to_string(q2_bin_ranges[q2_bin + 1]);
+                        // std::string hist_name = "MM2_W_" + std::to_string(w_bin_ranges[w_bin]) +
+                        //                         "_to_" + std::to_string(w_bin_ranges[w_bin + 1]) +
+                        //                         "_Q2_" + std::to_string(q2_bin_ranges[q2_bin]) +
+                        //                         "_to_" + std::to_string(q2_bin_ranges[q2_bin + 1]);
 
-                        MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, -0.04, 0.04);
+                        double w_min = w_bin_ranges[w_bin];
+                        double w_max = w_bin_ranges[w_bin + 1];
+                        double q2_min = q2_bin_ranges[q2_bin];
+                        double q2_max = q2_bin_ranges[q2_bin + 1];
+
+                        // Create an output string stream
+                        std::ostringstream oss;
+
+                        // Set precision for the output stream
+                        oss << std::setprecision(3) << std::fixed;
+
+                        // Format the histogram name
+                        oss << "MM2: W[" << w_min << ", " << w_max << "] Q2[" << q2_min << ", " << q2_max << "]";
+
+                        // Convert the output stream to a string
+                        std::string hist_name = oss.str();
+
+                        MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, 0.4, 1.4);
                 }
         }
 }
-
-// void Histogram::makeHists_MM2withbins() 
-// {
-//         MM2_hists.resize(w_nBins - 1);
-//         for (int w_bin = 0; w_bin < w_nBins - 1; ++w_bin) 
-//         {
-//                 MM2_hists[w_bin].resize(q2_nBins - 1);
-//                 for (int q2_bin = 0; q2_bin < q2_nBins - 1; ++q2_bin) 
-//                 {
-//                         std::string hist_name = "MM2_W_" + std::to_string(w_bin_ranges[w_bin]) +
-//                                                 "_to_" + std::to_string(w_bin_ranges[w_bin + 1]) +
-//                                                 "_Q2_" + std::to_string(q2_bin_ranges[q2_bin]) +
-//                                                 "_to_" + std::to_string(q2_bin_ranges[q2_bin + 1]);
-
-//                         MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, -0.04, 0.04);
-//                 }
-//         }
-// }
-
-// void Histogram::makeHists_MM2withbins() 
-// {
-//         MM2_hists.resize(w_nBins - 1);
-//         std::cout << "Resized MM2_hists to " << MM2_hists.size() << " W bins." << std::endl; // Add this print statement
-//         for (int w_bin = 0; w_bin < w_nBins - 1; ++w_bin) 
-//         {
-//                 MM2_hists[w_bin].resize(q2_nBins - 1);
-//                 std::cout << "Resized Q2 histograms for W bin " << w_bin << " to " << MM2_hists[w_bin].size() << " Q2 bins." << std::endl; // Add this print statement
-//                 for (int q2_bin = 0; q2_bin < q2_nBins - 1; ++q2_bin) 
-//                 {
-//                         std::string hist_name = "MM2_W_" + std::to_string(w_bin_ranges[w_bin]) +
-//                                                 "_to_" + std::to_string(w_bin_ranges[w_bin + 1]) +
-//                                                 "_Q2_" + std::to_string(q2_bin_ranges[q2_bin]) +
-//                                                 "_to_" + std::to_string(q2_bin_ranges[q2_bin + 1]);
-
-//                         MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, -0.04, 0.04);
-//                         std::cout << "Created histogram: " << hist_name << std::endl; // Add this print statement
-//                 }
-//         }
-// }
-
-// void Histogram::makeHists_MM2withbins() 
-// {
-//         MM2_hists.resize(1);  // Resize to have only one element
-//         MM2_hists[0].resize(1);  // Resize the inner vector to have only one element
-    
-//         // Create the histogram for the first w_bin and first q2_bin
-//         std::string hist_name = "MM2_W_" + std::to_string(w_bin_ranges[0]) +
-//                                 "_to_" + std::to_string(w_bin_ranges[1]) +
-//                                 "_Q2_" + std::to_string(q2_bin_ranges[0]) +
-//                                 "_to_" + std::to_string(q2_bin_ranges[1]);
-//         MM2_hists[0][0] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, -0.04, 0.04);
-// }
 
 void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
 {
@@ -342,7 +307,7 @@ void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
         double q2_val = _e->Q2();
         double mm2_val = _e->MM2_mProt();
 
-        // // Print values before the loops
+        // // print values before the loops
         // std::cout << "w_val: " << w_val << ", q2_val: " << q2_val << ", mm2_val: " << mm2_val << std::endl;
 
         for (int w_bin = 0; w_bin < w_nBins - 1; ++w_bin)
@@ -353,21 +318,18 @@ void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
                         double w_max = w_bin_ranges[w_bin + 1];
                         double q2_min = q2_bin_ranges[q2_bin];
                         double q2_max = q2_bin_ranges[q2_bin + 1];
-                        // double q2_max = q2_bin + 1 < q2_nBins ? q2_bin_ranges[q2_bin + 1] : std::numeric_limits<double>::infinity();
 
-                        // // Print values inside the loops
-                        // std::cout << "w_bin: " << w_bin << ", q2_bin: " << q2_bin << ", w_min: " << w_min << ", w_max: " << w_max << ", q2_min: " << q2_min << ", q2_max: " << q2_max << std::endl;
-
+                        // // print bins
                         // std::cout << "w_bin: " << w_bin << ", q2_bin: " << q2_bin << std::endl;
 
                         // put w and q2 data values in bin ranges for plotting purposes
                         if (w_val >= w_min && w_val < w_max && q2_val >= q2_min && q2_val < q2_max)
                         {
-                                // // Print the size of MM2_hists before accessing it
+                                // // print the size of MM2_hists before accessing it
                                 // std::cout << "MM2_hists size: " << MM2_hists.size() << std::endl;
 
                                 if (w_bin < MM2_hists.size() && q2_bin < MM2_hists[w_bin].size()) {
-                                        // // Print a message before filling the histogram
+                                        // // print a message before filling the histogram
                                         // std::cout << "Filling histogram for w_bin: " << w_bin << ", q2_bin: " << q2_bin << std::endl;
 
                                         MM2_hists[w_bin][q2_bin]->Fill(mm2_val, _e->weight());
@@ -392,7 +354,8 @@ void Histogram::Write_MM2withbins(TDirectory *Write_MM2_withbins_folder)
                 {
                         if (MM2_hists[w_bin][q2_bin] && MM2_hists[w_bin][q2_bin]->GetEntries())
                                 MM2_hists[w_bin][q2_bin]->GetXaxis()->SetTitle("MM2 (GeV^2)");
-                                std::cout << "Writing histogram for W bin " << w_bin << " and Q2 bin " << q2_bin << std::endl; // Add this print statement
+                                // // print a message before writing the histogram
+                                // std::cout << "Writing histogram for W bin " << w_bin << " and Q2 bin " << q2_bin << std::endl; // Add this print statement
                                 MM2_hists[w_bin][q2_bin]->Write();
                 }
         }
