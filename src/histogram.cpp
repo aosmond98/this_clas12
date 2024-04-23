@@ -35,7 +35,7 @@ Histogram::Histogram(const std::string &output_file)
         WvsQ2 = std::make_shared<TH2D>("WvsQ2", "WvsQ2", bins, zero, w_max,
                                          bins, zero, q2_max);
 
-        MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, 0.4, 1.4);
+        MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, 0, 2);
         W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
                                          bins, -0.04, 0.04);
 
