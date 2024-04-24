@@ -296,7 +296,7 @@ void Histogram::makeHists_MM2withbins()
                         // Convert the output stream to a string
                         std::string hist_name = oss.str();
 
-                        MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, 0.4, 1.4);
+                        MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, 0, 2);
                 }
         }
 }
