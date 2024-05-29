@@ -27,6 +27,7 @@
 #include <TDirectory.h>
 #include <sstream> // added this for w folders in mm2 w bins
 #include <iomanip> // Include the <iomanip> header for std::setprecision
+#include <TLine.h> // added for lines
 
 using namespace std;
 
@@ -84,6 +85,32 @@ protected:
     TH1D_ptr momentum;
     TH2D_ptr Mom_vs_Q2_hist[particle_num][charge_num][with_id_num];
 
+    TH1D_ptr ec_ecin_energy_0;
+    TH1D_ptr ec_ecin_energy_1;
+    TH1D_ptr ec_ecin_energy_2;
+    TH1D_ptr ec_ecin_energy_3;
+
+    TH2D_ptr pcal_vs_ecal;
+
+    TH1D_ptr ec_tot_energy;
+
+    TH1D_ptr elec_energy;
+    TH1D_ptr elec_mom;
+
+    TH1D_ptr vz;
+    TH1D_ptr vz_sec[num_sectors];
+
+    TH1D_ptr cc_nphe_tot;
+
+    TH1D_ptr sf;
+    TH2D_ptr W_vs_sf;
+    TH2D_ptr W_vs_sf_sec[num_sectors];
+
+    TH2D_ptr mom_vs_theta;
+    TH2D_ptr mom_vs_phi;
+    TH2D_ptr momvstheta_sec[num_sectors];
+    TH2D_ptr momvsphi_sec[num_sectors];
+    
     TH1D_ptr W;
     TH1D_ptr Q2;
     TH2D_ptr WvsQ2;
@@ -127,7 +154,7 @@ public:
 
     // W vs Q2
     void makeHists_WvsQ2();
-    void Fill_WvsQ2(const std::shared_ptr<Reaction> &_e);
+    void Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data);
     void Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e);
     void Write_WvsQ2();
 
