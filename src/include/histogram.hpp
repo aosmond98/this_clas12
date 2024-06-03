@@ -86,14 +86,8 @@ protected:
     TH2D_ptr Mom_vs_Q2_hist[particle_num][charge_num][with_id_num];
 
     TH1D_ptr ec_ecin_energy_0;
-    TH1D_ptr ec_ecin_energy_1;
-    TH1D_ptr ec_ecin_energy_2;
-    TH1D_ptr ec_ecin_energy_3;
-
     TH2D_ptr pcal_vs_ecal;
-
     TH1D_ptr ec_tot_energy;
-
     TH1D_ptr elec_energy;
     TH1D_ptr elec_mom;
 
@@ -105,6 +99,8 @@ protected:
     TH1D_ptr sf;
     TH2D_ptr W_vs_sf;
     TH2D_ptr W_vs_sf_sec[num_sectors];
+    TH2D_ptr sf_vs_mom;
+    TH2D_ptr sfvsmom_sec[num_sectors];
 
     TH2D_ptr mom_vs_theta;
     TH2D_ptr mom_vs_phi;

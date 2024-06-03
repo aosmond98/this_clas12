@@ -31,24 +31,18 @@ Histogram::Histogram(const std::string &output_file)
         momentum = std::make_shared<TH1D>("mom", "mom", bins, p_min, p_max);
 
         ec_ecin_energy_0 = std::make_shared<TH1D>("ec_ecin_energy_0", "ec_ecin_energy_0", bins, zero, 10.0);
-        ec_ecin_energy_1 = std::make_shared<TH1D>("ec_ecin_energy_1", "ec_ecin_energy_1", bins, zero, 10.0);
-        ec_ecin_energy_2 = std::make_shared<TH1D>("ec_ecin_energy_2", "ec_ecin_energy_2", bins, zero, 10.0);
-        ec_ecin_energy_3 = std::make_shared<TH1D>("ec_ecin_energy_3", "ec_ecin_energy_3", bins, zero, 10.0);
-
         pcal_vs_ecal = std::make_shared<TH2D>("pcal_vs_ecal", "pcal_vs_ecal", bins, zero, 2.0, bins, zero, 2.0);
-
         ec_tot_energy = std::make_shared<TH1D>("ec_tot_energy", "ec_tot_energy", bins, zero, 10.0);
-
         elec_energy = std::make_shared<TH1D>("elec_energy", "elec_energy", bins, zero, 10.0);
         elec_mom = std::make_shared<TH1D>("elec_mom", "elec_mom", bins, p_min, 10.0 );
-
         vz = std::make_shared<TH1D>("vz", "vz", bins, -10.0, 10.0);
-
         cc_nphe_tot = std::make_shared<TH1D>("cc_nphe_tot", "cc_nphe_tot", bins, zero, 50.0);
 
         sf = std::make_shared<TH1D>("sf", "sf", bins, zero, 0.5);
         W_vs_sf = std::make_shared<TH2D>("W_vs_sf", "W_vs_sf", bins, zero, 3.5,
                                          bins, 0.15, 0.35);
+        sf_vs_mom = std::make_shared<TH2D>("sf_vs_mom", "sf_vs_mom", bins, 0.10, 0.35,
+                                         bins, 1.0, 10.0);
 
         mom_vs_theta = std::make_shared<TH2D>("mom_vs_theta", "mom_vs_theta", bins, p_min, p_max, 
                                                 bins, zero, 40);
@@ -137,38 +131,38 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::share
         Q2->Fill(_e->Q2(), _e->weight());
         WvsQ2->Fill(_e->W(), _e->Q2(), _e->weight());
 
-        ec_ecin_energy_0->Fill(data->ec_ecin_energy(0), _e->weight());
-        ec_ecin_energy_1->Fill(data->ec_ecin_energy(1), _e->weight());
-        ec_ecin_energy_2->Fill(data->ec_ecin_energy(2), _e->weight());
-        ec_ecin_energy_3->Fill(data->ec_ecin_energy(3), _e->weight());
+        // Calculate ec_tot_energy for the first particle (index 0)
+        double ec_energy = data->ec_pcal_energy(0) + data->ec_ecin_energy(0) + data->ec_ecout_energy(0);
 
-        pcal_vs_ecal->Fill(data->ec_pcal_energy(0), data->ec_ecin_energy(0) + data->ec_ecout_energy(0), _e->weight());
+        // Define and calculate sf_calc
+        double sf_calc = ec_energy / _e->elec_mom();
 
-        ec_tot_energy->Fill(data->ec_tot_energy(0), _e->weight());
+        ec_ecin_energy_0->Fill(data->ec_ecin_energy(0));//, _e->weight());
+        pcal_vs_ecal->Fill(data->ec_pcal_energy(0), data->ec_ecin_energy(0) + data->ec_ecout_energy(0));//, _e->weight());
+        ec_tot_energy->Fill(data->ec_tot_energy(0));//, _e->weight());
+        elec_energy->Fill(_e->elec_E());//, _e->weight());
+        elec_mom->Fill(_e->elec_mom());//, _e->weight());
+        vz->Fill(data->vz(0));//, _e->weight());
+        cc_nphe_tot->Fill(data->cc_nphe_tot(0));//, _e->weight());
 
-        elec_energy->Fill(_e->elec_E(), _e->weight());
-        elec_mom->Fill(_e->elec_mom(), _e->weight());
+        sf_calc = (data->ec_ecin_energy(0) + data->ec_ecout_energy(0) + data->ec_pcal_energy(0)) / _e->elec_mom();
+        sf->Fill(sf_calc);//, _e->weight());
+        W_vs_sf->Fill(_e->W(), sf_calc);//, _e->weight());
+        sf_vs_mom->Fill(sf_calc, _e->elec_mom());
 
-        vz->Fill(data->vz(0), _e->weight());
-
-        cc_nphe_tot->Fill(data->cc_nphe_tot(0), _e->weight());
-
-        sf->Fill((data->ec_ecin_energy(0) + data->ec_ecout_energy(0) + data->ec_pcal_energy(0)) / _e->elec_mom(), _e->weight());
-
-        W_vs_sf->Fill(_e->W(), (data->ec_ecin_energy(0) + data->ec_ecout_energy(0) + data->ec_pcal_energy(0)) / _e->elec_mom(), _e->weight());
-
-        mom_vs_theta->Fill(_e->elec_mom(), _e->elec_theta(), _e->weight());
-        mom_vs_phi->Fill(_e->elec_mom(), _e->elec_phi(), _e->weight());
+        mom_vs_theta->Fill(_e->elec_mom(), _e->elec_theta());//, _e->weight());
+        mom_vs_phi->Fill(_e->elec_mom(), _e->elec_phi());//, _e->weight());
 
         short sec = _e->sec();
         if (sec > 0 && sec <= 6)
         {
                 W_sec[sec - 1]->Fill(_e->W(), _e->weight());
                 WvsQ2_sec[sec - 1]->Fill(_e->W(), _e->Q2(), _e->weight());
-                momvstheta_sec[sec - 1]->Fill(_e->elec_mom(), _e->elec_theta(), _e->weight());
-                momvsphi_sec[sec - 1]->Fill(_e->elec_mom(), _e->elec_phi(), _e->weight());
-                W_vs_sf_sec[sec - 1]->Fill(_e->W(), (data->ec_ecin_energy(0) + data->ec_ecout_energy(0) + data->ec_pcal_energy(0)) / _e->elec_mom(), _e->weight());
-                vz_sec[sec - 1]->Fill(data->vz(0), _e->weight());
+                momvstheta_sec[sec - 1]->Fill(_e->elec_mom(), _e->elec_theta());//, _e->weight());
+                momvsphi_sec[sec - 1]->Fill(_e->elec_mom(), _e->elec_phi());//, _e->weight());
+                W_vs_sf_sec[sec - 1]->Fill(_e->W(), sf_calc);//, _e->weight());
+                vz_sec[sec - 1]->Fill(data->vz(0));//, _e->weight());
+                sfvsmom_sec[sec - 1]->Fill(sf_calc, _e->elec_mom());
         }
 }
 
@@ -205,18 +199,6 @@ void Histogram::Write_WvsQ2()
         ec_ecin_energy_0->SetXTitle("ec_ecin_energy_0");
         if (ec_ecin_energy_0->GetEntries())
                 ec_ecin_energy_0->Write();
-        
-        ec_ecin_energy_1->SetXTitle("ec_ecin_energy_1");
-        if (ec_ecin_energy_1->GetEntries())
-                ec_ecin_energy_1->Write();
-
-        ec_ecin_energy_2->SetXTitle("ec_ecin_energy_2");
-        if (ec_ecin_energy_2->GetEntries())
-                ec_ecin_energy_2->Write();
-
-        ec_ecin_energy_3->SetXTitle("ec_ecin_energy_3");
-        if (ec_ecin_energy_3->GetEntries())
-                ec_ecin_energy_3->Write();
 
         ec_tot_energy->SetXTitle("ec_tot_energy");
         if (ec_tot_energy->GetEntries())
@@ -267,6 +249,12 @@ void Histogram::Write_WvsQ2()
         W_vs_sf->SetOption("COLZ1");
         if (W_vs_sf->GetEntries())
                 W_vs_sf->Write();
+
+        sf_vs_mom->SetXTitle("sf");
+        sf_vs_mom->SetYTitle("momentum");
+        sf_vs_mom->SetOption("COLZ1");
+        if (sf_vs_mom->GetEntries())
+                sf_vs_mom->Write();
 
         mom_vs_theta->SetXTitle("Momentum (GeV)");
         mom_vs_theta->SetYTitle("theta (degrees, probably)");
@@ -357,6 +345,20 @@ void Histogram::Write_WvsQ2()
                 vz_sec[i]->Draw("same");
         }
         vz_can->Write();
+
+        auto sfvsmom_can =
+            std::make_unique<TCanvas>("sfvsmom_can", "sf vs mom sectors", 1920, 1080);
+        sfvsmom_can->Divide(3, 2);
+        for (short i = 0; i < num_sectors; i++)
+        {
+                sfvsmom_sec[i]->SetYTitle("momentum");
+                sfvsmom_sec[i]->SetXTitle("sf");
+                sfvsmom_sec[i]->SetOption("COLZ1");
+                sfvsmom_can->cd(i + 1);
+                gPad->SetLogz();
+                sfvsmom_sec[i]->Draw("same");
+        }
+        sfvsmom_can->Write();
 
         W_mc->SetXTitle("W (GeV)");
         if (W_mc->GetEntries())
@@ -578,6 +580,11 @@ void Histogram::makeHists_sector()
                 W_vs_sf_sec[i] = std::make_shared<TH2D>(
                     Form("W_vs_sf_sec_%d", i + 1), Form("W vs sf Sector: %d", i + 1), bins,
                     zero, 3.5, bins, 0.15, 0.35);
+
+                sfvsmom_sec[i] = std::make_shared<TH2D>(
+                    Form("sfvsmom_sec_%d", i + 1), Form("sf vs mom Sector: %d", i + 1), bins,
+                    0.10, 0.35, bins, 1.0, 10.0);
+
 
                 vz_sec[i] =
                     std::make_shared<TH1D>(Form("vz_sec_%d", i + 1),
