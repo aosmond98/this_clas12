@@ -87,10 +87,12 @@ protected:
 
     TH1D_ptr ec_ecin_energy_0;
     TH2D_ptr pcal_vs_ecal;
+    TH2D_ptr pcal_ecal_x_vs_y;
     TH1D_ptr ec_tot_energy;
     TH1D_ptr elec_energy;
     TH1D_ptr elec_mom;
 
+    TH2D_ptr vx_vs_vy;
     TH1D_ptr vz;
     TH1D_ptr vz_sec[num_sectors];
 

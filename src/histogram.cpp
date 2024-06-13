@@ -32,9 +32,13 @@ Histogram::Histogram(const std::string &output_file)
 
         ec_ecin_energy_0 = std::make_shared<TH1D>("ec_ecin_energy_0", "ec_ecin_energy_0", bins, zero, 10.0);
         pcal_vs_ecal = std::make_shared<TH2D>("pcal_vs_ecal", "pcal_vs_ecal", bins, zero, 2.0, bins, zero, 2.0);
+        pcal_ecal_x_vs_y = std::make_shared<TH2D>("pcal_ecal_x_vs_y", "pcal_ecal_x_vs_y", bins, -10, 10,
+                                                 bins, -10, 10);
         ec_tot_energy = std::make_shared<TH1D>("ec_tot_energy", "ec_tot_energy", bins, zero, 10.0);
         elec_energy = std::make_shared<TH1D>("elec_energy", "elec_energy", bins, zero, 10.0);
-        elec_mom = std::make_shared<TH1D>("elec_mom", "elec_mom", bins, p_min, 10.0 );
+        elec_mom = std::make_shared<TH1D>("elec_mom", "elec_mom", bins, p_min, 10.0);
+        vx_vs_vy = std::make_shared<TH2D>("vx_vs_vy", "vx_vs_vy", bins, -4, 4,
+                                         bins, -4, 4);
         vz = std::make_shared<TH1D>("vz", "vz", bins, -10.0, 10.0);
         cc_nphe_tot = std::make_shared<TH1D>("cc_nphe_tot", "cc_nphe_tot", bins, zero, 50.0);
 
@@ -42,7 +46,7 @@ Histogram::Histogram(const std::string &output_file)
         W_vs_sf = std::make_shared<TH2D>("W_vs_sf", "W_vs_sf", bins, zero, 3.5,
                                          bins, 0.15, 0.35);
         sf_vs_mom = std::make_shared<TH2D>("sf_vs_mom", "sf_vs_mom", bins, 0.10, 0.35,
-                                         bins, 1.0, 10.0);
+                                         bins, 1.0, p_max);
 
         mom_vs_theta = std::make_shared<TH2D>("mom_vs_theta", "mom_vs_theta", bins, p_min, p_max, 
                                                 bins, zero, 40);
@@ -137,11 +141,17 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::share
         // Define and calculate sf_calc
         double sf_calc = ec_energy / _e->elec_mom();
 
+        // calculate ecal+pcal x and y
+        double ec_x = data->ec_ecin_x(0) + data->ec_ecout_x(0) + data->ec_pcal_x(0);
+        double ec_y = data->ec_ecin_y(0) + data->ec_ecout_y(0) + data->ec_pcal_y(0);
+
         ec_ecin_energy_0->Fill(data->ec_ecin_energy(0));//, _e->weight());
         pcal_vs_ecal->Fill(data->ec_pcal_energy(0), data->ec_ecin_energy(0) + data->ec_ecout_energy(0));//, _e->weight());
+        pcal_ecal_x_vs_y->Fill(ec_x, ec_y);
         ec_tot_energy->Fill(data->ec_tot_energy(0));//, _e->weight());
         elec_energy->Fill(_e->elec_E());//, _e->weight());
         elec_mom->Fill(_e->elec_mom());//, _e->weight());
+        vx_vs_vy->Fill(data->vx(0), data->vy(0));
         vz->Fill(data->vz(0));//, _e->weight());
         cc_nphe_tot->Fill(data->cc_nphe_tot(0));//, _e->weight());
 
@@ -209,6 +219,11 @@ void Histogram::Write_WvsQ2()
         if (pcal_vs_ecal->GetEntries())
                 pcal_vs_ecal->Write();
 
+        pcal_ecal_x_vs_y->SetXTitle("ec_x");
+        pcal_ecal_x_vs_y->SetYTitle("ec_y");
+        if (pcal_ecal_x_vs_y->GetEntries())
+                pcal_ecal_x_vs_y->Write();
+
         elec_energy->SetXTitle("elec_energy");
         if (elec_energy->GetEntries())
                 elec_energy->Write();
@@ -216,6 +231,11 @@ void Histogram::Write_WvsQ2()
         elec_mom->SetXTitle("elec_mom");
         if (elec_mom->GetEntries())
                 elec_mom->Write();
+
+        vx_vs_vy->SetXTitle("vx");
+        vx_vs_vy->SetYTitle("vy");
+        if (vx_vs_vy->GetEntries())
+                vx_vs_vy->Write();
 
         vz->SetXTitle("vz");
         if (vz->GetEntries())
@@ -583,8 +603,7 @@ void Histogram::makeHists_sector()
 
                 sfvsmom_sec[i] = std::make_shared<TH2D>(
                     Form("sfvsmom_sec_%d", i + 1), Form("sf vs mom Sector: %d", i + 1), bins,
-                    0.10, 0.35, bins, 1.0, 10.0);
-
+                    0.10, 0.35, bins, 1.0, p_max);
 
                 vz_sec[i] =
                     std::make_shared<TH1D>(Form("vz_sec_%d", i + 1),
