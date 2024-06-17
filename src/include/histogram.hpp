@@ -93,6 +93,7 @@ protected:
     TH1D_ptr elec_mom;
 
     TH2D_ptr vx_vs_vy;
+    TH2D_ptr corr_vx_vs_vy;
     TH1D_ptr vz;
     TH1D_ptr vz_sec[num_sectors];
 

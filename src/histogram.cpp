@@ -37,8 +37,10 @@ Histogram::Histogram(const std::string &output_file)
         ec_tot_energy = std::make_shared<TH1D>("ec_tot_energy", "ec_tot_energy", bins, zero, 10.0);
         elec_energy = std::make_shared<TH1D>("elec_energy", "elec_energy", bins, zero, 10.0);
         elec_mom = std::make_shared<TH1D>("elec_mom", "elec_mom", bins, p_min, 10.0);
-        vx_vs_vy = std::make_shared<TH2D>("vx_vs_vy", "vx_vs_vy", bins, -4, 4,
-                                         bins, -4, 4);
+        vx_vs_vy = std::make_shared<TH2D>("vx_vs_vy", "vx_vs_vy", bins, -0.5, 0,
+                                         bins, -0.6, 0.1);
+        corr_vx_vs_vy = std::make_shared<TH2D>("corr_vx_vs_vy", "corr_vx_vs_vy", bins, -0.5, 0,
+                                         bins, -0.6, 0.1);
         vz = std::make_shared<TH1D>("vz", "vz", bins, -10.0, 10.0);
         cc_nphe_tot = std::make_shared<TH1D>("cc_nphe_tot", "cc_nphe_tot", bins, zero, 50.0);
 
@@ -145,6 +147,10 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::share
         double ec_x = data->ec_ecin_x(0) + data->ec_ecout_x(0) + data->ec_pcal_x(0);
         double ec_y = data->ec_ecin_y(0) + data->ec_ecout_y(0) + data->ec_pcal_y(0);
 
+        // corrected vx and vy
+        double corr_vx = data->vx(0) - 0.152;
+        double corr_vy = data->vy(0) - 0.232;
+
         ec_ecin_energy_0->Fill(data->ec_ecin_energy(0));//, _e->weight());
         pcal_vs_ecal->Fill(data->ec_pcal_energy(0), data->ec_ecin_energy(0) + data->ec_ecout_energy(0));//, _e->weight());
         pcal_ecal_x_vs_y->Fill(ec_x, ec_y);
@@ -152,6 +158,7 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::share
         elec_energy->Fill(_e->elec_E());//, _e->weight());
         elec_mom->Fill(_e->elec_mom());//, _e->weight());
         vx_vs_vy->Fill(data->vx(0), data->vy(0));
+        corr_vx_vs_vy->Fill(corr_vx, corr_vy);
         vz->Fill(data->vz(0));//, _e->weight());
         cc_nphe_tot->Fill(data->cc_nphe_tot(0));//, _e->weight());
 
@@ -236,6 +243,11 @@ void Histogram::Write_WvsQ2()
         vx_vs_vy->SetYTitle("vy");
         if (vx_vs_vy->GetEntries())
                 vx_vs_vy->Write();
+
+        corr_vx_vs_vy->SetXTitle("corr_vx");
+        corr_vx_vs_vy->SetYTitle("corr_vy");
+        if (corr_vx_vs_vy->GetEntries())
+                corr_vx_vs_vy->Write();
 
         vz->SetXTitle("vz");
         if (vz->GetEntries())
