@@ -37,10 +37,10 @@ Histogram::Histogram(const std::string &output_file)
         ec_tot_energy = std::make_shared<TH1D>("ec_tot_energy", "ec_tot_energy", bins, zero, 10.0);
         elec_energy = std::make_shared<TH1D>("elec_energy", "elec_energy", bins, zero, 10.0);
         elec_mom = std::make_shared<TH1D>("elec_mom", "elec_mom", bins, p_min, 10.0);
-        vx_vs_vy = std::make_shared<TH2D>("vx_vs_vy", "vx_vs_vy", bins, -0.5, 0,
-                                         bins, -0.6, 0.1);
-        corr_vx_vs_vy = std::make_shared<TH2D>("corr_vx_vs_vy", "corr_vx_vs_vy", bins, -0.5, 0,
-                                         bins, -0.6, 0.1);
+        vx_vs_vy = std::make_shared<TH2D>("vx_vs_vy", "vx_vs_vy", bins, -2, 2,
+                                         bins, -2, 2);
+        corr_vx_vs_vy = std::make_shared<TH2D>("corr_vx_vs_vy", "corr_vx_vs_vy", bins, -2, 2,
+                                         bins, -2, 2);
         vz = std::make_shared<TH1D>("vz", "vz", bins, -10.0, 10.0);
         cc_nphe_tot = std::make_shared<TH1D>("cc_nphe_tot", "cc_nphe_tot", bins, zero, 50.0);
 
