@@ -52,6 +52,9 @@ protected:
     double w_max = 5.0;
     double zero = 0.0;
 
+    double mm2_min = -5.0;
+    double mm2_max = 5.0;
+
     // number of W and Q^2 bins
     static constexpr int w_nBins = 25; // 25 
     static constexpr int q2_nBins = 17; // 17
@@ -61,7 +64,7 @@ protected:
                                 1.7, 1.725, 1.75, 1.775, 1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 
                                 1.975, 2.0
                                 };
-    double q2_bin_ranges[q2_nBins] = {2.0, 2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 
+    double q2_bin_ranges[q2_nBins] = {02.0, 02.4, 03.0, 03.5, 04.2, 05.0, 06.0, 07.0, 08.0, 09.0, 11.0, 13.0, 15.0, 18.0, 
                                 21.0, 25.0, 30.0
                                 };
 
@@ -83,7 +86,7 @@ protected:
     std::mutex mutex;
 
     TH1D_ptr momentum;
-    TH2D_ptr Mom_vs_Q2_hist[particle_num][charge_num][with_id_num];
+    TH2D_ptr Mom_vs_MM2_hist[particle_num][charge_num][with_id_num];
 
     TH1D_ptr ec_ecin_energy_0;
     TH2D_ptr pcal_vs_ecal;
@@ -93,7 +96,7 @@ protected:
     TH1D_ptr elec_mom;
 
     TH2D_ptr vx_vs_vy;
-    TH2D_ptr corr_vx_vs_vy;
+    // TH2D_ptr corr_vx_vs_vy;
     TH1D_ptr vz;
     TH1D_ptr vz_sec[num_sectors];
 
@@ -102,8 +105,8 @@ protected:
     TH1D_ptr sf;
     TH2D_ptr W_vs_sf;
     TH2D_ptr W_vs_sf_sec[num_sectors];
-    TH2D_ptr sf_vs_mom;
-    TH2D_ptr sfvsmom_sec[num_sectors];
+    TH2D_ptr mom_vs_sf;
+    TH2D_ptr momvssf_sec[num_sectors];
 
     TH2D_ptr mom_vs_theta;
     TH2D_ptr mom_vs_phi;
@@ -116,6 +119,7 @@ protected:
 
     TH1D_ptr MM2;
     TH2D_ptr W_vs_MM2;
+    TH2D_ptr Mom_vs_MM2;
 
     TH1D_ptr W_mc;
     TH1D_ptr Q2_mc;
@@ -159,7 +163,7 @@ public:
 
     // W vs MM2
     void makeHists_MM2();
-    void Fill_MM2(const std::shared_ptr<Reaction> &_e);
+    void Fill_MM2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data);
     // void Fill_WvsMM2_mc(const std::shared_ptr<MCReaction> &_e);
     void Write_MM2();
 
@@ -173,10 +177,10 @@ public:
     void Fill_MomVsBeta(const std::shared_ptr<Branches12> &data, int part, const std::shared_ptr<Reaction> &_e);
     void Write_MomVsBeta();
 
-    // Mom vs Q2
-    void makeHists_MomVsQ2();
-    void Fill_MomVsQ2(const std::shared_ptr<Branches12> &data, int part, const std::shared_ptr<Reaction> &_e);
-    void Write_MomVsQ2();
+    // Mom vs MM2
+    void makeHists_MomVsMM2();
+    void Fill_MomVsMM2(const std::shared_ptr<Branches12> &data, int part, const std::shared_ptr<Reaction> &_e);
+    void Write_MomVsMM2();
 
     // Delta T
     void makeHists_deltat();
