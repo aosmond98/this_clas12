@@ -70,7 +70,7 @@ struct csv_data {
 
     // return "vx_elec,vy_elec,vz_elec,vx_prot,vy_prot,vz_prot,vx_pip,vy_pip,vz_pip,vx_pim,vy_pim,vz_pim"
     //        ",weight";
-    return "w_gen,q2_gen,weight_gen";
+    return "w,q2,weight";
     // return "w_rec,q2_rec,weight_rec";
     // ,elec_mom_gen, elec_th_gen, elec_phi_gen, prot_mom_gen, prot_th_gen, prot_phi_gen, pip_mom_gen, pip_th_ "
     //        "gen,pip_phi_gen,pim_mom_gen,pim_th_gen,pim_phi_gen,weight";
