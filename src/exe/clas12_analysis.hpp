@@ -15,7 +15,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 10.2;
+  float beam_energy = 11.0;
   // don't need following code since it gives the same result in both cases (?) 
   // if (std::is_same<CutType, rga_Cuts>::value) {
   //   beam_energy = 10.2;
