@@ -16,7 +16,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 24.0;
+  float beam_energy = 11.0;
   // if (std::is_same<CutType, rga_Cuts>::value) {
   //   beam_energy = 10.6;
   // } else if (std::is_same<CutType, uconn_Cuts>::value) {
@@ -150,12 +150,12 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         csv_data output;
 
         // // // // // //  1) for generated
-        // output.w_mc = mc_event->W_mc();
-        // output.q2_mc = mc_event->Q2_mc();
+        output.w_mc = mc_event->W_mc();
+        output.q2_mc = mc_event->Q2_mc();
 
         // // // /// 2) reconstructed  and rec exclusive
-        output.w = event->W();
-        output.q2 = event->Q2();
+        // output.w = event->W();
+        // output.q2 = event->Q2();
         // // output.w_had = event->w_hadron();
         // output.w_diff = event->w_difference();
         // output.sf = (data->ec_tot_energy(0) / (event->elec_mom()));
@@ -200,7 +200,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // // //         // output.status_Pip = statusPip;
         // // //         // output.status_Prot = statusProt;
 
-        output.weight_rec = event->weight();
+        // output.weight_rec = event->weight();
 
         // //         // output.sf = (data->ec_tot_energy(0) / (event->elec_mom()));
         // output.gen_elec_E = mc_event->elec_E_mc_gen();
@@ -237,7 +237,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // output.vertex_had[2][2] = vertex_hadron[2][2];
 
         // output.weight_gen = event->weight();
-        // output.weight_gen = mc_event->weight();
+        output.weight_gen = mc_event->weight();
 
         _sync->write(output);
       }
