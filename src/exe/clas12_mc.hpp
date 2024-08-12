@@ -71,8 +71,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     _hists->Fill_WvsQ2_mc(mc_event);
 
     auto dt = std::make_shared<Delta_T>(data);
-    auto cuts = std::make_shared<uconn_Cuts>(data);
-    // auto cuts = std::make_shared<rga_Cuts>(data);
+    // auto cuts = std::make_shared<uconn_Cuts>(data);
+    auto cuts = std::make_shared<rga_Cuts>(data);
     if (!cuts->ElectronCuts()) continue;
 
     // Make a reaction class from the data given

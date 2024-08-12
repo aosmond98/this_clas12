@@ -13,8 +13,7 @@ class Reaction {
  protected:
   std::shared_ptr<Branches12> _data;
 
-// hopefully command line overrides this to be right if i missed it
-  double _beam_energy = 10.6;
+  double _beam_energy = 24.0;
   std::unique_ptr<TLorentzVector> _beam;
   std::unique_ptr<TLorentzVector> _elec;
   std::unique_ptr<TLorentzVector> _gamma;
@@ -46,7 +45,7 @@ class Reaction {
   short _sector = -1;
 
   float _MM = NAN;
-  float _MM2 = NAN;
+  float _MM2_mPim = NAN;
   float _MM2_exclusive = NAN;
   float _excl_Energy = NAN;
   float _excl_Mom = NAN;;
@@ -61,6 +60,10 @@ class Reaction {
   double _elec_mom = NAN;
   float _theta_e = NAN;
   float _elec_phi = NAN;
+
+  // // attempt at sf
+  // double _sf = NAN;
+  // double _ecal = NAN;
 
   float _prot_status = NAN;
   float _pip_status = NAN;
@@ -78,13 +81,12 @@ class Reaction {
   inline float weight() {
     return _data->mc_weight();
     // return 1.0;
-  } 
+  }
   // Check lists when you swich from mc to exp or vice-versa
-  // 1. inline weight function above 
+  // 1. inline weight function above
   // 2. clas12_yields: auto data = std::make_shared<Branches12>(_chain, true);  turn off true for data
   // 3. from if (data->mc_npart() < 1) to all particle set up im mc events.
   // 4. all mc bank related (generated) output parameters will not work in exp data
-  // 5. line 119
 
   // momentum correction
   void SetMomCorrElec();
@@ -129,7 +131,7 @@ class Reaction {
 
   void CalcMissMass();
   float MM();
-  float MM2();
+  float MM2_mPim();
   float MM2_exclusive();
   float Energy_excl();
   float Mom_excl();
