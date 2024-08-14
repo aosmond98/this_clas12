@@ -132,13 +132,14 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         csv_data output;
 
         // ----- Generated data -----
-        output.w_mc = mc_event->W_mc();
-        output.q2_mc = mc_event->Q2_mc();
-        output.weight_gen = mc_event->weight();
+        // output.w_mc = mc_event->W_mc();
+        // output.q2_mc = mc_event->Q2_mc();
+        // output.weight_gen = mc_event->weight();
 
         // ----- Reconstructed and rec exclusive data -----
-        // output.w = event->W();
-        // output.q2 = event->Q2();
+        output.w = event->W();
+        output.q2 = event->Q2();
+        output.weight_rec = event->weight();
         // output.w_had = event->w_hadron();
         // output.w_diff = event->w_difference();
         // output.sf = (data->ec_tot_energy(0) / (event->elec_mom()));
@@ -149,7 +150,6 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // output.elec_theta_rec = (event->elec_theta());
         // output.elec_phi_rec = (event->elec_phi());
         // output.status_Elec = abs(data->status(0));
-        // output.weight_rec = event->weight();
         // output.no_of_events =
 
         // // //         // output.status_Elec =  abs(data->status(0));

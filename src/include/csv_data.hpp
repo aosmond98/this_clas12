@@ -70,7 +70,8 @@ struct csv_data {
 
     // return "vx_elec,vy_elec,vz_elec,vx_prot,vy_prot,vz_prot,vx_pip,vy_pip,vz_pip,vx_pim,vy_pim,vz_pim"
     //        ",weight";
-    return "w_mc,q2_mc,weight_gen";
+    // return "w_mc,q2_mc,weight_gen";
+    return "w,q2,weight_rec";
     // return "w_mc,q2_mc,weight_gen,w,q2,weight";
     // ,elec_mom_gen, elec_th_gen, elec_phi_gen, prot_mom_gen, prot_th_gen, prot_phi_gen, pip_mom_gen, pip_th_ "
     //        "gen,pip_phi_gen,pim_mom_gen,pim_th_gen,pim_phi_gen,weight";
@@ -78,9 +79,9 @@ struct csv_data {
 
   friend std ::ostream &operator<<(std::ostream &os, const csv_data &data) {
     os << std::setprecision(7);
-    os << data.w_mc << ",";
-    os << data.q2_mc << ",";
-    os << data.weight_gen<< ",";
+    // os << data.w_mc << ",";
+    // os << data.q2_mc << ",";
+    // os << data.weight_gen<< ",";
 
     // // os << data.gen_elec_E << ",";
     // os << data.gen_elec_mom << ",";
@@ -98,8 +99,8 @@ struct csv_data {
     // os << data.gen_pim_mom << ",";
     // os << data.gen_pim_theta << ",";
     // os << data.gen_pim_phi<< ",";
-    // os << data.w << ",";
-    // os << data.q2 << ",";
+    os << data.w << ",";
+    os << data.q2 << ",";
     // os << data.w_had << ",";
     // // os << data.w_diff << ",";
     // os << data.sf << ",";
@@ -126,7 +127,7 @@ struct csv_data {
 
 
     // // os << std::setprecision(8);
-    // os << data.weight_rec << ",";
+    os << data.weight_rec << ",";
 
     // os << data.vertex_x << ",";
     // os << data.vertex_y << ",";
