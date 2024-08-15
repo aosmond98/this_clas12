@@ -43,7 +43,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     if (thread_id == 0 && current_event % 1000 == 0)
       std::cout << "\t" << (100 * current_event / num_of_events) << " %\r" << std::flush;
 
-// ************** --- use for sim data, comment out for exp data (?? maybe this is where the issue is for not having enough gen_events) ---
+// ************** --- use for sim data, comment out for exp data (?? maybe this is where the issue is 
+//                      for not having enough gen_events; comment out for gen?) ---
     if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
