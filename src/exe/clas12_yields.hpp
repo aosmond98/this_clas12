@@ -16,7 +16,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 10.2;
+  float beam_energy = 22.0;
 
   if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
