@@ -72,16 +72,19 @@ class Reaction {
   void SetElec();
 
 
-
-
  public:
   Reaction(){};
   Reaction(const std::shared_ptr<Branches12> &data, float beam_energy);
   ~Reaction();
+
   inline float weight() {
+    // --- use for sim data ---
     return _data->mc_weight();
+
+    //--- use for exp data ---
     // return 1.0;
   }
+
   // Check lists when you swich from mc to exp or vice-versa
   // 1. inline weight function above
   // 2. clas12_yields: auto data = std::make_shared<Branches12>(_chain, true);  turn off true for data

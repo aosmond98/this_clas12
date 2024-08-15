@@ -25,9 +25,9 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
             << num_of_events << " Events " << DEF << "===============\n";
 
   // Make a data object which all the branches can be accessed from
-  // for sim data use
+  // ---use for sim data ---
   auto data = std::make_shared<Branches12>(_chain, true);
-  // for exp data use
+  // ---use for exp data ---
   // auto data = std::make_shared<Branches12>(_chain);
 
   // Total number of events "Processed"
@@ -43,6 +43,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     if (thread_id == 0 && current_event % 1000 == 0)
       std::cout << "\t" << (100 * current_event / num_of_events) << " %\r" << std::flush;
 
+// ************** --- use for sim data, comment out for exp data (?? maybe this is where the issue is for not having enough gen_events) ---
     if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
@@ -140,7 +141,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // output.w = event->W();
         // output.q2 = event->Q2();
         // output.weight_rec = event->weight();
-        
+
         // output.w_had = event->w_hadron();
         // output.w_diff = event->w_difference();
         // output.sf = (data->ec_tot_energy(0) / (event->elec_mom()));
