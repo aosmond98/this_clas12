@@ -16,7 +16,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 24.0;
+  float beam_energy = 22.0;
 
   if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
@@ -134,14 +134,14 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         csv_data output;
 
         // ----- Generated data ----- could move this part up to where other gen stuff is?
-        // output.w_mc = mc_event->W_mc();
-        // output.q2_mc = mc_event->Q2_mc();
-        // output.weight_gen = mc_event->weight();
+        output.w_mc = mc_event->W_mc();
+        output.q2_mc = mc_event->Q2_mc();
+        output.weight_gen = mc_event->weight();
 
         // ----- Reconstructed and rec exclusive data -----
-        output.w = event->W();
-        output.q2 = event->Q2();
-        output.weight_rec = event->weight();
+        // output.w = event->W();
+        // output.q2 = event->Q2();
+        // output.weight_rec = event->weight();
 
         // output.w_had = event->w_hadron();
         // output.w_diff = event->w_difference();

@@ -75,10 +75,10 @@ struct csv_data {
     //        "gen,pip_phi_gen,pim_mom_gen,pim_th_gen,pim_phi_gen,weight";
 
 // ----- Generated -----
-    // return "w_mc,q2_mc,weight";
+    return "w_mc,q2_mc,weight";
 
 // ----- Reconstructed -----
-    return "w,q2,weight";
+    // return "w,q2,weight";
 
   }
 
@@ -86,14 +86,14 @@ struct csv_data {
     os << std::setprecision(7);
 
 // ----- Generated -----
-    // os << data.w_mc << ",";
-    // os << data.q2_mc << ",";
-    // os << data.weight_gen<< ",";
+    os << data.w_mc << ",";
+    os << data.q2_mc << ",";
+    os << data.weight_gen<< ",";
 
 // ----- Reconstructed -----
-    os << data.w << ",";
-    os << data.q2 << ",";
-    os << data.weight_rec << ",";
+    // os << data.w << ",";
+    // os << data.q2 << ",";
+    // os << data.weight_rec << ",";
 
     // // os << data.gen_elec_E << ",";
     // os << data.gen_elec_mom << ",";
