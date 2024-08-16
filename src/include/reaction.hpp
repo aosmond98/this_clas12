@@ -61,10 +61,6 @@ class Reaction {
   float _theta_e = NAN;
   float _elec_phi = NAN;
 
-  // // attempt at sf
-  // double _sf = NAN;
-  // double _ecal = NAN;
-
   float _prot_status = NAN;
   float _pip_status = NAN;
   float _pim_status = NAN;
