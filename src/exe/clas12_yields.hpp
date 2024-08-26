@@ -16,7 +16,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 22.0;
+  float beam_energy = 24.0;
 
   if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
@@ -43,14 +43,14 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
     if (thread_id == 0 && current_event % 1000 == 0)
       std::cout << "\t" << (100 * current_event / num_of_events) << " %\r" << std::flush;
 
-// ************** --- use for sim data, comment out for exp data (?? maybe this is where the issue is 
-//                      for not having enough gen_events; comment out for gen?) ---
-    // if (data->mc_npart() < 1) continue;
+    // ************** --- use for sim data, comment out for exp data (?? maybe this is where the issue is 
+    //                      for not having enough gen_events; comment out for gen?) ---
+    if (data->mc_npart() < 1) continue;
 
     // // If we pass electron cuts the event is processed
     total++;
 
-// ----- Generated reaction class -----
+    // ----- Generated reaction class -----
     // Make a reaction class from the data given
     auto mc_event = std::make_shared<MCReaction>(data, beam_energy);
 
@@ -77,7 +77,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
       }
     }
 
-// ----- Reconstructed reaction class -----
+    // ----- Reconstructed reaction class -----
     int statusPim = -9999;
     int statusPip = -9999;
     int statusProt = -9999;
@@ -134,14 +134,14 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         csv_data output;
 
         // ----- Generated data ----- could move this part up to where other gen stuff is?
-        // output.w_mc = mc_event->W_mc();
-        // output.q2_mc = mc_event->Q2_mc();
-        // output.weight_gen = mc_event->weight();
+        output.w_mc = mc_event->W_mc();
+        output.q2_mc = mc_event->Q2_mc();
+        output.weight_gen = mc_event->weight();
 
         // ----- Reconstructed and rec exclusive data -----
-        output.w = event->W();
-        output.q2 = event->Q2();
-        output.weight_rec = event->weight();
+        // output.w = event->W();
+        // output.q2 = event->Q2();
+        // output.weight_rec = event->weight();
 
         // output.w_had = event->w_hadron();
         // output.w_diff = event->w_difference();

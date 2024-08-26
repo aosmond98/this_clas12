@@ -65,20 +65,15 @@ struct csv_data {
     //        "status_Pim,status_Pip,status_Prot,weight";
     // return "w,q2,elec_E_rec,elec_mom_rec,elec_th_rec,elec_phi_rec,status_elec,"
     //        "weight";
-    // return "w,q2,w_had,weight,energy_x_mu,mom_x_mu,w_mc,q2_mc";
-    // return "w,q2,w_had,weight,energy_x_mu,mom_x_mu";
-
-    // return "vx_elec,vy_elec,vz_elec,vx_prot,vy_prot,vz_prot,vx_pip,vy_pip,vz_pip,vx_pim,vy_pim,vz_pim"
-    //        ",weight";
     // return "w_mc,q2_mc,weight_gen,w,q2,weight";
     // ,elec_mom_gen, elec_th_gen, elec_phi_gen, prot_mom_gen, prot_th_gen, prot_phi_gen, pip_mom_gen, pip_th_ "
     //        "gen,pip_phi_gen,pim_mom_gen,pim_th_gen,pim_phi_gen,weight";
 
 // ----- Generated -----
-    // return "w_mc,q2_mc,weight";
+    return "w_mc,q2_mc,weight";
 
 // ----- Reconstructed -----
-    return "w,q2,weight";
+    // return "w,q2,weight";
 
   }
 
@@ -86,14 +81,14 @@ struct csv_data {
     os << std::setprecision(7);
 
 // ----- Generated -----
-    // os << data.w_mc << ",";
-    // os << data.q2_mc << ",";
-    // os << data.weight_gen<< ",";
+    os << data.w_mc << ",";
+    os << data.q2_mc << ",";
+    os << data.weight_gen<< ",";
 
 // ----- Reconstructed -----
-    os << data.w << ",";
-    os << data.q2 << ",";
-    os << data.weight_rec << ",";
+    // os << data.w << ",";
+    // os << data.q2 << ",";
+    // os << data.weight_rec << ",";
 
     // // os << data.gen_elec_E << ",";
     // os << data.gen_elec_mom << ",";

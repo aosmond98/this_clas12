@@ -77,7 +77,7 @@ class Reaction {
     // --- use for sim data ---
     return _data->mc_weight();
 
-    //--- use for exp data ---
+    // --- use for exp data ---
     // return 1.0;
   }
 
