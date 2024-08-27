@@ -15,7 +15,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
   // Get the number of events in this thread
   size_t num_of_events = (int)_chain->GetEntries();
 
-  float beam_energy = 11.0;
+  float beam_energy = 10.2;
 
   // if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
