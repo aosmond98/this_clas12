@@ -134,6 +134,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         csv_data output;
 
         // ----- Generated data ----- could move this part up to where other gen stuff is?
+        output.event = current_event;
         output.w_mc = mc_event->W_mc();
         output.q2_mc = mc_event->Q2_mc();
         output.weight_gen = mc_event->weight();
