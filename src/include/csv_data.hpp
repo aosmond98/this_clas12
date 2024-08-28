@@ -5,7 +5,7 @@
 #include <string>
 
 struct csv_data {
-  // int event; //added for event number 
+  int event; //added for event number 
   short electron_sector;
   float sf;
   float w;
@@ -82,7 +82,7 @@ struct csv_data {
     os << std::setprecision(7);
 
 // ----- Generated -----
-    os << current_event << ",";
+    os << data.event << ",";
     os << data.w_mc << ",";
     os << data.q2_mc << ",";
     os << data.weight_gen<< ",";
