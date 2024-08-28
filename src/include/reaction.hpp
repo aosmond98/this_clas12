@@ -13,8 +13,8 @@ class Reaction {
  protected:
   std::shared_ptr<Branches12> _data;
 
-  // double _beam_energy = 24.0;
-  double _beam_energy = beam_energy;
+  double _beam_energy = 24.0;
+  // double _beam_energy = beam_energy;
   std::unique_ptr<TLorentzVector> _beam;
   std::unique_ptr<TLorentzVector> _elec;
   std::unique_ptr<TLorentzVector> _gamma;
