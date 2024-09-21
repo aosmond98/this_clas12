@@ -36,7 +36,11 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
             << num_of_events << " Events " << DEF << "===============\n";
 
   // Make a data object which all the branches can be accessed from
-  auto data = is_gen_data || is_rec_data ? std::make_shared<Branches12>(_chain, true) : std::make_shared<Branches12>(_chain);
+  // auto data = is_gen_data || is_rec_data ? std::make_shared<Branches12>(_chain, true) : std::make_shared<Branches12>(_chain);
+  auto data = (is_gen_data || is_rec_data) 
+               ? std::make_shared<Branches12>(_chain, true)  // For gen and rec
+               : std::make_shared<Branches12>(_chain);       // For exp
+
 
   // Total number of events "Processed"
   size_t total = 0;
@@ -77,14 +81,14 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
       }
 
       // ----- Process Reconstructed Data -----
-      else if (is_rec_data) {
+      else if (is_rec_data || is_exp_data) {
         int statusPim = -9999;
         int statusPip = -9999;
         int statusProt = -9999;
         float vertex_hadron[3][3];
 
         // Make cuts
-        if (data->mc_npart() < 1) continue;
+        if (is_rec_data && data->mc_npart() < 1) continue;
         auto dt = std::make_shared<Delta_T>(data);
         auto cuts = std::make_shared<rga_Cuts>(data);
         if (!cuts->ElectronCuts()) continue;
