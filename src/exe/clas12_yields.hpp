@@ -58,7 +58,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
       // ----- Process Generated Data -----
       if (is_gen_data) {
         // ----- Generated reaction class -----
-        auto mc_event = std::make_shared<MCReaction>(data, beam_energy);
+        auto mc_event = std::make_shared<MCReaction>(data, beam_energy, "gen");
         for (int part = 1; part < data->mc_npart(); part++) {
           if (data->mc_pid(part) == PIP) {
             mc_event->SetMCPip(part);
@@ -96,7 +96,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         total++;  // Increment only if the event is processed with rec cuts
 
         // ----- Reconstructed reaction class -----
-        auto event = std::make_shared<Reaction>(data, beam_energy);
+        auto event = std::make_shared<Reaction>(data, beam_energy, is_rec_data ? "rec" : "exp");
         for (int part = 1; part < data->gpart(); part++) {
           dt->dt_calc(part);
           if (cuts->IsProton(part)) {
