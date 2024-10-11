@@ -1,7 +1,8 @@
 
 #include "reaction.hpp"
 
-Reaction::Reaction(const std::shared_ptr<Branches12>& data, float beam_energy) {
+Reaction::Reaction(const std::shared_ptr<Branches12> &data, float beam_energy, const std::string &data_type)
+    : _data(data), _beam_energy(beam_energy), _data_type(data_type) {
   _data = data;
   _beam = std::make_unique<TLorentzVector>();
   _beam_energy = beam_energy;
@@ -409,7 +410,8 @@ float Reaction::prot_Phi_lab_measured() {
 }
 
 
-MCReaction::MCReaction(const std::shared_ptr<Branches12>& data, float beam_energy) {
+MCReaction::MCReaction(const std::shared_ptr<Branches12> &data, float beam_energy, const std::string &data_type)
+    : Reaction(data, beam_energy, data_type) {
   _data = data;
   if (!_data->mc()) _data->mc_branches();
   _beam = std::make_unique<TLorentzVector>();

@@ -14,6 +14,7 @@ class Reaction {
   std::shared_ptr<Branches12> _data;
 
   double _beam_energy = 24.0;
+  std::string _data_type;
   // double _beam_energy = beam_energy;
   std::unique_ptr<TLorentzVector> _beam;
   std::unique_ptr<TLorentzVector> _elec;
@@ -71,7 +72,7 @@ class Reaction {
 
  public:
   Reaction(){};
-  Reaction(const std::shared_ptr<Branches12> &data, float beam_energy);
+  Reaction(const std::shared_ptr<Branches12> &data, float beam_energy, const std::string &data_type);
   ~Reaction();
 
   inline float weight() {
@@ -200,7 +201,7 @@ class MCReaction : public Reaction {
   void SetMCPim(int i);
   void SetMCOther(int i);
 
-  MCReaction(const std::shared_ptr<Branches12> &data, float beam_energy);
+  MCReaction(const std::shared_ptr<Branches12> &data, float beam_energy, const std::string &data_type);
   void SetMCElec();
   inline float weight() { return _data->mc_weight(); }
   inline float W_mc() { return _W_mc; }
