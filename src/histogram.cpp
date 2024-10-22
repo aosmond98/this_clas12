@@ -508,8 +508,8 @@ void Histogram::Write_MM2()
 void Histogram::initialize_bins() {
         // Calculate the lower and upper edges for W bins
         for (int i = 0; i < w_nBins; ++i) {
-            w_bin_lower[i] = w_bin_centers[i] - 0.0125;
-            w_bin_upper[i] = w_bin_centers[i] + 0.0125;
+            w_bin_lower[i] = w_bin_centers[i] - 0.025;
+            w_bin_upper[i] = w_bin_centers[i] + 0.025;
         }
 
          // Calculate the lower and upper edges for Q² bins
@@ -564,13 +564,13 @@ void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
     for (int w_bin = 0; w_bin < w_nBins - 1; ++w_bin)
     {
         // Check if w_val falls into the current W bin
-        if (w_val >= w_bin_lower[w_bin] && w_val < w_bin_upper[w_bin])
+        if (w_val >= w_bin_lower[w_bin] && w_val <= w_bin_upper[w_bin])
         {
             // Loop over Q² bins
             for (int q2_bin = 0; q2_bin < q2_nBins - 1; ++q2_bin)
             {
                 // Check if q2_val falls into the current Q² bin
-                if (q2_val >= q2_bin_lower[q2_bin] && q2_val < q2_bin_upper[q2_bin])
+                if (q2_val >= q2_bin_lower[q2_bin] && q2_val <= q2_bin_upper[q2_bin])
                 {
                     // Now fill the correct histogram for this W and Q² bin
                     if (w_bin < MM2_hists.size() && q2_bin < MM2_hists[w_bin].size())

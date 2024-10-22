@@ -52,13 +52,13 @@ protected:
     double w_max = 5.0;
     double zero = 0.0;
 
-    double mm2_min = -5.0;
-    double mm2_max = 5.0;
+    double mm2_min = -0.2;
+    double mm2_max = 0.2;
 
     // ----- W and Q^2 binning -----
 
     // number of W and Q^2 bins
-    static constexpr int w_nBins = 25; // 25 
+    static constexpr int w_nBins = 13; // 25 
     static constexpr int q2_nBins = 17; // 17
 
     // bin ranges for W and Q^2 (lower and upper edges)
@@ -66,10 +66,7 @@ protected:
     double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
 
     // Define the center values for W and Q^2
-    double w_bin_centers[w_nBins] = {1.4, 1.425, 1.45, 1.475, 1.5, 1.525, 1.55, 1.575, 1.6, 1.625, 1.65, 1.675, 
-                                     1.7, 1.725, 1.75, 1.775, 1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 
-                                     1.975, 2.0
-                                    };
+    double w_bin_centers[w_nBins] = {1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0};
     double q2_bin_centers[q2_nBins] = {2.0, 2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 
                                        21.0, 25.0, 30.0
                                       };
