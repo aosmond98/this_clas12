@@ -71,10 +71,10 @@ Histogram::Histogram(const std::string &output_file)
         W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
                                          bins, mm2_min, mm2_max);
 
-        // W_mc = std::make_shared<TH1D>("W_mc", "W_mc", bins, zero, w_max);
-        // Q2_mc = std::make_shared<TH1D>("Q2_mc", "Q2_mc", bins, zero, q2_max);
-        // WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, zero, w_max,
-        //                                  bins, zero, q2_max);
+        W_mc = std::make_shared<TH1D>("W_mc", "W_mc", bins, zero, w_max);
+        Q2_mc = std::make_shared<TH1D>("Q2_mc", "Q2_mc", bins, zero, q2_max);
+        WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, zero, w_max,
+                                         bins, zero, q2_max);
 
         makeHists_deltat();
         makeHists_MomVsBeta();
@@ -185,11 +185,11 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::share
         }
 }
 
-// void Histogram::Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e)
-// {
-//         W_mc->Fill(_e->W_mc(), _e->weight());
-//         Q2_mc->Fill(_e->Q2_mc(), _e->weight());
-//         WvsQ2_mc->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
+void Histogram::Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e)
+{
+        W_mc->Fill(_e->W_mc(), _e->weight());
+        Q2_mc->Fill(_e->Q2_mc(), _e->weight());
+        WvsQ2_mc->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
         
 //         short sec = _e->sec();
 //         if (sec > 0 && sec <= 6)
@@ -197,7 +197,7 @@ void Histogram::Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::share
 //                 W_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->weight());
 //                 WvsQ2_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
 //         }
-// }
+}
 
 void Histogram::Write_WvsQ2()
 {
@@ -394,22 +394,22 @@ void Histogram::Write_WvsQ2()
         }
         momvssf_can->Write();
 
-//         W_mc->SetXTitle("W (GeV)");
-//         if (W_mc->GetEntries())
-//                 W_mc->Write();
+        W_mc->SetXTitle("W (GeV)");
+        if (W_mc->GetEntries())
+                W_mc->Write();
 
-//         Q2_mc->SetXTitle("Q^{2} (GeV^{2})");
-//         if (Q2_mc->GetEntries())
-//                 Q2_mc->Write();
+        Q2_mc->SetXTitle("Q^{2} (GeV^{2})");
+        if (Q2_mc->GetEntries())
+                Q2_mc->Write();
 
-//         WvsQ2_mc->SetXTitle("W (GeV)");
-//         WvsQ2_mc->SetYTitle("Q2 (GeV^{2})");
-//         WvsQ2_mc->SetOption("COLZ1");
-//         if (WvsQ2_mc->GetEntries())
-//                 WvsQ2_mc->Write();
-//                 // gPad->SetLogz(true); // Set the color scale to logarithmic
-//                 // // Set log scale on the Z-axis
-//                 // WvsQ2_gen->SetLogz(true);
+        WvsQ2_mc->SetXTitle("W (GeV)");
+        WvsQ2_mc->SetYTitle("Q2 (GeV^{2})");
+        WvsQ2_mc->SetOption("COLZ1");
+        if (WvsQ2_mc->GetEntries())
+                WvsQ2_mc->Write();
+                // gPad->SetLogz(true); // Set the color scale to logarithmic
+                // // Set log scale on the Z-axis
+                // WvsQ2_gen->SetLogz(true);
 
 //         auto W_mc_can = std::make_unique<TCanvas>("W_mc_can", "W_mc sectors", 1920, 1080);
 //         W_mc_can->Divide(3, 2);

@@ -11,9 +11,9 @@ int main(int argc, char** argv) {
   if (getenv("NUM_THREADS") != NULL) NUM_THREADS = atoi(getenv("NUM_THREADS"));
   if (NUM_THREADS > argc - 2) NUM_THREADS = 1;  // Ensure thread count doesn't exceed input files
 
-  // Parse beam energy from environment variable (default to 10.6)
-  float beam_energy = 10.6;
-  if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
+  // // Parse beam energy from environment variable (default to 10.6)
+  // float beam_energy = 10.6;
+  // if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
   // Make a vector of vectors of strings the size of the number of threads
   std::vector<std::vector<std::string>> infilenames(NUM_THREADS);

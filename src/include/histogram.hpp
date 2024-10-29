@@ -124,9 +124,9 @@ protected:
     TH2D_ptr W_vs_MM2;
     TH2D_ptr Mom_vs_MM2;
 
-    // TH1D_ptr W_mc;
-    // TH1D_ptr Q2_mc;
-    // TH2D_ptr WvsQ2_mc;
+    TH1D_ptr W_mc;
+    TH1D_ptr Q2_mc;
+    TH2D_ptr WvsQ2_mc;
     // TH1D_ptr MM2_mc;
     // TH2D_ptr W_vs_MM2_mc;
 
@@ -164,7 +164,7 @@ public:
     // W vs Q2
     void makeHists_WvsQ2();
     void Fill_WvsQ2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data);
-    // void Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e);
+    void Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e);
     void Write_WvsQ2();
 
     // W vs MM2
