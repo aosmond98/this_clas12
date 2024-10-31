@@ -58,18 +58,17 @@ protected:
     // ----- W and Q^2 binning -----
 
     // number of W and Q^2 bins
-    static constexpr int w_nBins = 13; // 25 
-    static constexpr int q2_nBins = 17; // 17
+    static constexpr int w_nBins = 12; // 25 
+    static constexpr int q2_nBins = 16; // 17
 
     // bin ranges for W and Q^2 (lower and upper edges)
-    double w_bin_lower[w_nBins], w_bin_upper[w_nBins];
-    double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
+    // double w_bin_lower[w_nBins], w_bin_upper[w_nBins];
+    // double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
 
-    // Define the center values for W and Q^2
-    double w_bin_centers[w_nBins] = {1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0};
-    double q2_bin_centers[q2_nBins] = {2.0, 2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 
-                                       21.0, 25.0, 30.0
-                                      };
+    double w_bin_lower[w_nBins] = {1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95};
+    double w_bin_upper[w_nBins] = {1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0};
+    double q2_bin_lower[q2_nBins] = {2.0, 2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 21.0, 25.0};
+    double q2_bin_upper[q2_nBins] = {2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 21.0, 25.0, 30.0};
 
     static const short particle_num = 4; // 0-e 1-Pi 2-P 3-K
     std::string particle_name[particle_num] = {"e", "pi", "P", "K"};
@@ -155,7 +154,7 @@ public:
     Histogram(const std::string &output_file);
     ~Histogram();
 
-    void initialize_bins();
+    // void initialize_bins();
 
 
     // sectors
