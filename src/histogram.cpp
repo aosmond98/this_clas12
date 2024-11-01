@@ -572,8 +572,8 @@ void Histogram::Write_MM2withbins(TDirectory *Write_MM2_withbins_folder)
         {
                 // Create a subdirectory for each Q² bin based on the lower edge of the bin
                 std::stringstream q2_folder_name;
-                q2_folder_name << "Q2_" << std::fixed << std::setprecision(3) << q2_bin_lower[q2_bin] << "-" <<
-                        std::fixed << std::setprecision(3) << q2_bin_upper[q2_bin];
+                q2_folder_name << "Q2_[" << std::fixed << std::setprecision(3) << q2_bin_lower[q2_bin] << "-" <<
+                        std::fixed << std::setprecision(3) << q2_bin_upper[q2_bin] << ")";
                 TDirectory *q2_dir = Write_MM2_withbins_folder->mkdir(q2_folder_name.str().c_str());
                 q2_dir->cd();  // Change to the Q²-specific subdirectory
 

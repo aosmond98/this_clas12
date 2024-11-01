@@ -62,8 +62,8 @@ protected:
     static constexpr int q2_nBins = 16; // 17
 
     // bin ranges for W and Q^2 (lower and upper edges)
-    // double w_bin_lower[w_nBins], w_bin_upper[w_nBins];
-    // double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
+    double w_bin_lower[w_nBins], w_bin_upper[w_nBins];
+    double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
 
     double w_bin_lower[w_nBins] = {1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95};
     double w_bin_upper[w_nBins] = {1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0};
