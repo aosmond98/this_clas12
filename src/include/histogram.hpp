@@ -61,7 +61,7 @@ protected:
     static constexpr int w_nBins = 12; // 25 
     static constexpr int q2_nBins = 16; // 17
 
-    // // bin ranges for W and Q^2 (lower and upper edges)
+    // bin ranges for W and Q^2 (lower and upper edges)
     // double w_bin_lower[w_nBins], w_bin_upper[w_nBins];
     // double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
 
@@ -126,18 +126,18 @@ protected:
     TH1D_ptr W_mc;
     TH1D_ptr Q2_mc;
     TH2D_ptr WvsQ2_mc;
-    // TH1D_ptr MM2_mc;
-    // TH2D_ptr W_vs_MM2_mc;
+    TH1D_ptr MM2_mc;
+    TH2D_ptr W_vs_MM2_mc;
 
     TH1D_ptr W_sec[num_sectors];
     TH2D_ptr WvsQ2_sec[num_sectors];
     TH1D_ptr MM2_sec[num_sectors];
     TH2D_ptr W_vs_MM2_sec[num_sectors];
 
-    // TH1D_ptr W_mc_sec[num_sectors];
-    // TH2D_ptr WvsQ2_mc_sec[num_sectors];
-    // TH1D_ptr MM2_mc_sec[num_sectors];
-    // TH2D_ptr W_vs_MM2_mc_sec[num_sectors];
+    TH1D_ptr W_mc_sec[num_sectors];
+    TH2D_ptr WvsQ2_mc_sec[num_sectors];
+    TH1D_ptr MM2_mc_sec[num_sectors];
+    TH2D_ptr W_vs_MM2_mc_sec[num_sectors];
 
     std::vector<std::vector<TH1D_ptr>> MM2_hists;
 
@@ -169,7 +169,7 @@ public:
     // W vs MM2
     void makeHists_MM2();
     void Fill_MM2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data);
-    // void Fill_WvsMM2_mc(const std::shared_ptr<MCReaction> &_e);
+    void Fill_WvsMM2_mc(const std::shared_ptr<MCReaction> &_e);
     void Write_MM2();
 
     // MM2 with bins

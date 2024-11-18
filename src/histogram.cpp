@@ -191,12 +191,12 @@ void Histogram::Fill_WvsQ2_mc(const std::shared_ptr<MCReaction> &_e)
         Q2_mc->Fill(_e->Q2_mc(), _e->weight());
         WvsQ2_mc->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
         
-//         short sec = _e->sec();
-//         if (sec > 0 && sec <= 6)
-//         {
-//                 W_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->weight());
-//                 WvsQ2_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
-//         }
+        short sec = _e->sec();
+        if (sec > 0 && sec <= 6)
+        {
+                W_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->weight());
+                WvsQ2_mc_sec[sec - 1]->Fill(_e->W_mc(), _e->Q2_mc(), _e->weight());
+        }
 }
 
 void Histogram::Write_WvsQ2()
@@ -411,31 +411,31 @@ void Histogram::Write_WvsQ2()
                 // // Set log scale on the Z-axis
                 // WvsQ2_gen->SetLogz(true);
 
-//         auto W_mc_can = std::make_unique<TCanvas>("W_mc_can", "W_mc sectors", 1920, 1080);
-//         W_mc_can->Divide(3, 2);
-//         for (short i = 0; i < num_sectors; i++)
-//         {
-//                 W_mc_sec[i]->SetXTitle("W_mc (GeV)");
-//                 W_mc_can->cd(i + 1);
-//                 //  W_sec[i]->Fit("gaus", "QMR+", "QMR+", 0.85, 1.05);
-//                 // gStyle->SetOptFit(01);
-//                 W_mc_sec[i]->Draw("same");
-//         }
-//         W_mc_can->Write();
+        auto W_mc_can = std::make_unique<TCanvas>("W_mc_can", "W_mc sectors", 1920, 1080);
+        W_mc_can->Divide(3, 2);
+        for (short i = 0; i < num_sectors; i++)
+        {
+                W_mc_sec[i]->SetXTitle("W_mc (GeV)");
+                W_mc_can->cd(i + 1);
+                //  W_sec[i]->Fit("gaus", "QMR+", "QMR+", 0.85, 1.05);
+                // gStyle->SetOptFit(01);
+                W_mc_sec[i]->Draw("same");
+        }
+        W_mc_can->Write();
 
-//         auto WvsQ2_mc_can =
-//             std::make_unique<TCanvas>("WvsQ2_mc_can", "W vs Q2 mc sectors", 1920, 1080);
-//         WvsQ2_mc_can->Divide(3, 2);
-//         for (short i = 0; i < num_sectors; i++)
-//         {
-//                 WvsQ2_mc_sec[i]->SetYTitle("Q^{2} (GeV^{2})");
-//                 WvsQ2_mc_sec[i]->SetXTitle("W (GeV)");
-//                 WvsQ2_mc_sec[i]->SetOption("COLZ1");
-//                 WvsQ2_mc_can->cd(i + 1);
-//                 gPad->SetLogz();
-//                 WvsQ2_mc_sec[i]->Draw("same");
-//         }
-//         WvsQ2_mc_can->Write();
+        auto WvsQ2_mc_can =
+            std::make_unique<TCanvas>("WvsQ2_mc_can", "W vs Q2 mc sectors", 1920, 1080);
+        WvsQ2_mc_can->Divide(3, 2);
+        for (short i = 0; i < num_sectors; i++)
+        {
+                WvsQ2_mc_sec[i]->SetYTitle("Q^{2} (GeV^{2})");
+                WvsQ2_mc_sec[i]->SetXTitle("W (GeV)");
+                WvsQ2_mc_sec[i]->SetOption("COLZ1");
+                WvsQ2_mc_can->cd(i + 1);
+                gPad->SetLogz();
+                WvsQ2_mc_sec[i]->Draw("same");
+        }
+        WvsQ2_mc_can->Write();
 }
 
 void Histogram::Fill_MM2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data)
@@ -629,21 +629,21 @@ void Histogram::makeHists_sector()
                     Form("WvsMM2_sec_%d", i + 1), Form("W vs MM^{2} Sector: %d", i + 1), bins,
                     p_min, 1, bins, -0.04, 0.04);
                 
-                // W_mc_sec[i] =
-                //     std::make_shared<TH1D>(Form("w_mc_sec_%d", i + 1),
-                //                            Form("W mc Sector: %d", i + 1), bins, zero, w_max);
+                W_mc_sec[i] =
+                    std::make_shared<TH1D>(Form("w_mc_sec_%d", i + 1),
+                                           Form("W mc Sector: %d", i + 1), bins, zero, w_max);
 
-                // WvsQ2_mc_sec[i] = std::make_shared<TH2D>(
-                //     Form("wvsq2_mc_sec_%d", i + 1), Form("W vs Q^{2} mc Sector: %d", i + 1), bins,
-                //     zero, w_max, bins, zero, q2_max);
+                WvsQ2_mc_sec[i] = std::make_shared<TH2D>(
+                    Form("wvsq2_mc_sec_%d", i + 1), Form("W vs Q^{2} mc Sector: %d", i + 1), bins,
+                    zero, w_max, bins, zero, q2_max);
 
-                // MM2_mc_sec[i] =
-                //     std::make_shared<TH1D>(Form("mm2_mc_sec_%d", i + 1),
-                //                            Form("MM2_mc Sector: %d", i + 1), bins, -0.04, 0.04);
+                MM2_mc_sec[i] =
+                    std::make_shared<TH1D>(Form("mm2_mc_sec_%d", i + 1),
+                                           Form("MM2_mc Sector: %d", i + 1), bins, -0.04, 0.04);
 
-                // W_vs_MM2_mc_sec[i] = std::make_shared<TH2D>(
-                //     Form("WvsMM2_mc_sec_%d", i + 1), Form("W vs MM^{2} mc Sector: %d", i + 1), bins,
-                //     p_min, 1, bins, -0.04, 0.04);
+                W_vs_MM2_mc_sec[i] = std::make_shared<TH2D>(
+                    Form("WvsMM2_mc_sec_%d", i + 1), Form("W vs MM^{2} mc Sector: %d", i + 1), bins,
+                    p_min, 1, bins, -0.04, 0.04);
         }
 }
 
