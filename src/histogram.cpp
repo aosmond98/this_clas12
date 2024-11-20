@@ -6,6 +6,19 @@
 #include <iostream>
 #include <utility>
 #include <sys/stat.h> // For creating directories
+#include <string>
+
+static bool contains(const std::string& str, const std::string& substr) {
+    return str.find(substr) != std::string::npos;
+}
+
+std::string determineTopology(const std::string& output_filename) {
+    if (contains(output_filename, "excl")) return "excl";
+    if (contains(output_filename, "mProt")) return "mProt";
+    if (contains(output_filename, "mPip")) return "mPip";
+    if (contains(output_filename, "mPim")) return "mPim";
+    return "unknown";
+}
 
 Histogram::Histogram(const std::string &output_file)
 {
@@ -31,6 +44,42 @@ Histogram::Histogram(const std::string &output_file)
                         w_max = 7.0;
                         p_max = 7.0;
                 }
+        }
+
+        if (output_file.find("excl") != std::string::npos) {
+                topology = "excl";
+        } else if (output_file.find("mProt") != std::string::npos) {
+                topology = "mProt";
+        } else if (output_file.find("mPip") != std::string::npos) {
+                topology = "mPip";
+        } else if (output_file.find("mPim") != std::string::npos) {
+                topology = "mPim";
+        } else {
+                throw std::runtime_error("Unknown topology in output filename.");
+        }
+
+        // Detect topology from output filename
+        std::string topology = determineTopology(output_file);
+
+        // Set default MM² range
+        mm2_min = -0.5;
+        mm2_max = 0.5;
+
+        // Set MM² range based on topology
+        if (topology == "excl") {
+                mm2_min = -0.5;
+                mm2_max = 0.5;
+        } else if (topology == "mProt") {
+                mm2_min = 0.7;
+                mm2_max = 1.2;
+        } else if (topology == "mPip") {
+                mm2_min = -0.1;
+                mm2_max = 0.1;
+        } else if (topology == "mPim") {
+                mm2_min = -0.1;
+                mm2_max = 0.1;
+        } else {
+                std::cerr << "Warning: Unknown topology detected. Using default MM² range.\n";
         }
 
         momentum = std::make_shared<TH1D>("mom", "mom", bins, p_min, p_max);
@@ -75,6 +124,11 @@ Histogram::Histogram(const std::string &output_file)
         Q2_mc = std::make_shared<TH1D>("Q2_mc", "Q2_mc", bins, zero, q2_max);
         WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, zero, w_max,
                                          bins, zero, q2_max);
+        MM2_mc = std::make_shared<TH1D>("MM2_mc", "MM2_mc", bins, mm2_min, mm2_max);
+        Mom_vs_MM2_mc = std::make_shared<TH2D>("Mom_vs_MM2", "Mom_vs_MM2", bins, p_min, p_max,
+                                                bins, mm2_min, mm2_max);
+        W_vs_MM2_mc = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
+                                         bins, mm2_min, mm2_max);
 
         makeHists_deltat();
         makeHists_MomVsBeta();
@@ -440,7 +494,34 @@ void Histogram::Write_WvsQ2()
 
 void Histogram::Fill_MM2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data)
 {
-       double MM2_val = _e->MM2_exclusive();
+        // double MM2_val;
+
+        // if (topology == "excl") {
+        //         MM2_val = _e->MM2_exclusive();
+        // } else if (topology == "mProt") {
+        //         MM2_val = _e->MM2_mProt();
+        // } else if (topology == "mPip") {
+        //         MM2_val = _e->MM2_mPip();
+        // } else if (topology == "mPim") {
+        //         MM2_val = _e->MM2_mPim();
+        // } else {
+        //         std::cerr << "Warning: Unknown topology \"" << topology << "\". Using default MM2_val = 0.\n";
+        // }
+
+        double MM2_val = 0.0;
+
+        // Select the MM2 calculation based on topology
+        if (topology == "excl") {
+                MM2_val = _e->MM2_exclusive();
+        } else if (topology == "mProt") {
+                MM2_val = _e->MM2_mProt();
+        } else if (topology == "mPip") {
+                MM2_val = _e->MM2_mPip();
+        } else if (topology == "mPim") {
+                MM2_val = _e->MM2_mPim();
+        }
+
+        // double MM2_val = _e->MM2_mPip();
         
         MM2->Fill(MM2_val, _e->weight());
         W_vs_MM2->Fill(_e->W(), MM2_val, _e->weight());
@@ -455,6 +536,21 @@ void Histogram::Fill_MM2(const std::shared_ptr<Reaction> &_e, const std::shared_
                 W_vs_MM2_sec[sec - 1]->Fill(_e->W(), MM2_val, _e->weight());
         }
 }
+
+// void Histogram::Fill_MM2_mc(const std::shared_ptr<MCReaction> &_e, const std::shared_ptr<MCBranches12> &data)
+// {
+//        double MM2_val = _e->MM2_exclusive_mc();       
+//         MM2_mc->Fill(MM2_val, _e->weight());
+//         W_vs_MM2_mc->Fill(_e->W_mc(), MM2_val, _e->weight());
+//         // Mom_vs_MM2_->Fill(data->p(0), MM2_val, _e->weight());
+//         // W_vs_sf->Fill(_e->W(), _e->sf(), _e->weight());
+//         short sec = _e->sec();
+//         if (sec > 0 && sec <= 6)
+//         {
+//                 MM2_mc_sec[sec - 1]->Fill(MM2_val, _e->weight());
+//                 W_vs_MM2_mc_sec[sec - 1]->Fill(_e->W_mc(), MM2_val, _e->weight());
+//         }
+// }
 
 void Histogram::Write_MM2()
 {
@@ -480,6 +576,22 @@ void Histogram::Write_MM2()
         // if (W_vs_sf->GetEntries())
         //         W_vs_sf->Write();  
 
+        MM2_mc->SetXTitle("MM2_mc (GeV2)");
+        if (MM2_mc->GetEntries())
+                MM2_mc->Write(); 
+
+        W_vs_MM2_mc->SetYTitle("MM^{2}_mc (GeV^{2})");
+        W_vs_MM2_mc->SetXTitle("W_mc (GeV)");
+        // W_vs_MM2->SetOption("COLZ1");
+        if (W_vs_MM2_mc->GetEntries())
+                W_vs_MM2_mc->Write();
+
+        Mom_vs_MM2_mc->SetYTitle("MM^{2}_mc (GeV^{2})");
+        Mom_vs_MM2_mc->SetXTitle("Mom_mc (GeV)");
+        // Mom_vs_MM2->SetOption("COLZ1");
+        if (Mom_vs_MM2_mc->GetEntries())
+                Mom_vs_MM2_mc->Write();
+
         auto MM2_can = std::make_unique<TCanvas>("MM2_can", "MM2 sectors", 1920, 1080);
         MM2_can->Divide(3, 2);
         for (short i = 0; i < num_sectors; i++)
@@ -503,6 +615,30 @@ void Histogram::Write_MM2()
                 W_vs_MM2_sec[i]->Draw("same");
         }
         WvsMM2_can->Write();
+
+        auto MM2_mc_can = std::make_unique<TCanvas>("MM2_mc_can", "MM2 sectors", 1920, 1080);
+        MM2_mc_can->Divide(3, 2);
+        for (short i = 0; i < num_sectors; i++)
+        {
+                MM2_mc_sec[i]->SetXTitle("MM2 (GeV)");
+                MM2_mc_can->cd(i + 1);
+                MM2_mc_sec[i]->Draw("same");
+        }
+        MM2_mc_can->Write();
+
+        auto WvsMM2_mc_can =
+            std::make_unique<TCanvas>("WvsMM2_mc_can", "W vs MM2 sectors", 1920, 1080);
+        WvsMM2_mc_can->Divide(3, 2);
+        for (short i = 0; i < num_sectors; i++)
+        {
+                W_vs_MM2_mc_sec[i]->SetYTitle("MM^{2} (GeV^{2})");
+                W_vs_MM2_mc_sec[i]->SetXTitle("W (GeV)");
+                W_vs_MM2_mc_sec[i]->SetOption("COLZ1");
+                WvsMM2_mc_can->cd(i + 1);
+                gPad->SetLogz();
+                W_vs_MM2_mc_sec[i]->Draw("same");
+        }
+        WvsMM2_mc_can->Write();
 }
 
 // void Histogram::initialize_bins() {

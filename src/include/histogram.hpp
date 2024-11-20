@@ -52,8 +52,11 @@ protected:
     double w_max = 5.0;
     double zero = 0.0;
 
-    double mm2_min = -0.2;
-    double mm2_max = 0.2;
+    double mm2_min = -2.0;
+    double mm2_max = 2.0;
+
+    double MM2_val;
+    std::string topology;
 
     // ----- W and Q^2 binning -----
 
@@ -126,8 +129,10 @@ protected:
     TH1D_ptr W_mc;
     TH1D_ptr Q2_mc;
     TH2D_ptr WvsQ2_mc;
+
     TH1D_ptr MM2_mc;
     TH2D_ptr W_vs_MM2_mc;
+    TH2D_ptr Mom_vs_MM2_mc;
 
     TH1D_ptr W_sec[num_sectors];
     TH2D_ptr WvsQ2_sec[num_sectors];
@@ -169,6 +174,7 @@ public:
     // W vs MM2
     void makeHists_MM2();
     void Fill_MM2(const std::shared_ptr<Reaction> &_e, const std::shared_ptr<Branches12> &data);
+    void Fill_MM2_mc(const std::shared_ptr<MCReaction> &_e, const std::shared_ptr<MCBranches12> &data);
     void Fill_WvsMM2_mc(const std::shared_ptr<MCReaction> &_e);
     void Write_MM2();
 

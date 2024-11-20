@@ -11,7 +11,7 @@
 #include "reaction.hpp"
 
 // Helper function to check if a string contains a substring (case-sensitive)
-bool contains(const std::string& str, const std::string& substr) {
+static bool contains(const std::string& str, const std::string& substr) {
   return str.find(substr) != std::string::npos;
 }
 
@@ -27,6 +27,12 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
   // Determine the data processing type (rec or exp) based on output filename
   bool is_rec_data = contains(output_filename, "rec");
   bool is_exp_data = contains(output_filename, "exp");
+
+  // Determine the topology based on output filename
+  bool is_topology_excl = contains(output_filename, "excl");
+  bool is_topology_mProt = contains(output_filename, "mProt");
+  bool is_topology_mPip = contains(output_filename, "mPip");
+  bool is_topology_mPim = contains(output_filename, "mPim");
 
   // Print some information for each thread
   std::cout << "=============== " << RED << "Thread " << thread_id << DEF << " =============== " << BLUE
@@ -50,7 +56,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
     if (thread_id == 0 && current_event % 1000 == 0)
       std::cout << "\t" << (100 * current_event / num_of_events) << " %\r" << std::flush;
 
-    // Make sure to skip events for rec data with no particles
+    // Skip events for rec data with no particles
     if (is_rec_data && data->mc_npart() < 1) continue;
 
     // If we pass electron cuts the event is processed
@@ -84,10 +90,10 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
       }
     }
 
-    // if (event->TwoPion_missingPim()) {
-    // if (event->TwoPion_missingPip()) {
-    // if (event->TwoPion_missingProt()) {
-    if (event->TwoPion_exclusive()) {
+    if ((is_topology_excl && event->TwoPion_exclusive()) ||
+        (is_topology_mProt && event->TwoPion_missingProt()) ||
+        (is_topology_mPip && event->TwoPion_missingPip()) ||
+        (is_topology_mPim && event->TwoPion_missingPim())) {
       if (event->W() > 0.0 && event->W() < 5.0 && event->Q2() > 0.0 && event->Q2() < 30.0 && event->weight() > 0.0) {
         _hists->Fill_WvsQ2(event, data);
         _hists->Fill_MM2(event, data);

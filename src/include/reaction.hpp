@@ -77,7 +77,7 @@ class Reaction {
 
   inline float weight() {
     // --- use for sim data ---
-    return _data->mc_weight() / 1e4; // divide by 10^4
+    return _data->mc_weight() / 1e4; // edited to divide by 10^4
 
     // --- use for exp data ---
     // return 1.0;
@@ -195,6 +195,7 @@ class MCReaction : public Reaction {
 
   float _MM2_exclusive_mc = NAN;
   float _excl_Energy_mc = NAN;
+
  public:
   void SetMCProton(int i);
   void SetMCPip(int i);
@@ -203,9 +204,12 @@ class MCReaction : public Reaction {
 
   MCReaction(const std::shared_ptr<Branches12> &data, float beam_energy, const std::string &data_type);
   void SetMCElec();
+  void CalcMissMass_mc();
+
   inline float weight() { return _data->mc_weight(); }
   inline float W_mc() { return _W_mc; }
   inline float Q2_mc() { return _Q2_mc; }
+  inline float MM2_exclusive_mc() const { return _MM2_exclusive_mc; }
 
   float elec_mom_mc_gen();
   float pim_mom_mc_gen();
@@ -224,7 +228,7 @@ class MCReaction : public Reaction {
   float pip_phi_mc_gen();
   float prot_phi_mc_gen();
 
-  void CalcMissMass_mc();
+  // void CalcMissMass_mc();
 
 };
 

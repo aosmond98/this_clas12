@@ -31,6 +31,17 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
   bool is_rec_data = contains(output_filename, "rec");
   bool is_exp_data = contains(output_filename, "exp");
 
+  // Determine the topology based on output filename
+  bool is_topology_excl = contains(output_filename, "excl");
+  bool is_topology_mProt = contains(output_filename, "mProt");
+  bool is_topology_mPip = contains(output_filename, "mPip");
+  bool is_topology_mPim = contains(output_filename, "mPim");
+
+  // Ensure only one topology is selected
+  if ((is_topology_excl + is_topology_mProt + is_topology_mPip + is_topology_mPim) > 1) {
+    throw std::invalid_argument("Output filename must specify exactly one topology: excl, mProt, mPip, or mPim.");
+  }
+
   // Print some information for each thread
   std::cout << "=============== " << RED << "Thread " << thread_id << DEF << " =============== " << BLUE
             << num_of_events << " Events " << DEF << "===============\n";
@@ -113,17 +124,16 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
           }
         }
         
-        // if (event->TwoPion_missingPim()) {
-        // if (event->TwoPion_missingPip()) {
-        // if (event->TwoPion_missingProt()) {
-        if (event->TwoPion_exclusive()) {
-          if (event->W() > 1.25 && event->W() < 2.55 && event->Q2() > 1.5 && event->Q2() < 30.0 && event->weight() > 0.0) {
+        if ((is_topology_excl && event->TwoPion_exclusive()) ||
+            (is_topology_mProt && event->TwoPion_missingProt()) ||
+            (is_topology_mPip && event->TwoPion_missingPip()) ||
+            (is_topology_mPim && event->TwoPion_missingPim())) {
+          if (event->W() > 0.0 && event->W() < 5.0 && event->Q2() > 0.0 && event->Q2() < 30.0 && event->weight() > 0.0) {
+            
             total_twopion_events++;
 
             // ----- Reconstructed data output -----
-
             csv_data output;
-
             output.event = current_event;
             output.w = event->W();
             output.q2 = event->Q2();
