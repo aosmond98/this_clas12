@@ -77,9 +77,9 @@ class Reaction {
 
   inline float weight() {
     // --- use for sim data ---
-    return _data->mc_weight(); // / 1e4; // edited to divide by 10^4
+    // return _data->mc_weight(); // / 1e4; // edited to divide by 10^4
     // --- use for exp data ---
-    // return 1.0;
+    return 1.0;
   }
 
   // Check lists when you swich from mc to exp or vice-versa
