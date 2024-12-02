@@ -124,13 +124,49 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
           }
         }
         
+        double q2_min_analysis = -1.0, q2_max_analysis = 30.0;
+        double w_min_analysis = 1.0, w_max_analysis = 2.5;
+
+        // Dynamically set W and Q2 limits based on BEAM_E
+        if (getenv("BEAM_E") != NULL) {
+          double beam_energy = atof(getenv("BEAM_E"));
+          if (beam_energy < 3) {
+            q2_max_analysis = 1.0;
+            w_max_analysis = 3.5;
+            w_min_analysis = 0.9;
+          } else if (beam_energy < 11) {
+            q2_min_analysis = 0.0;
+            q2_max_analysis = 12.0;
+            w_min_analysis = 1.0;
+            w_max_analysis = 2.5;
+          } else if (beam_energy < 24) {
+            q2_min_analysis = 2.0;
+            q2_max_analysis = 30.0;
+            w_min_analysis = 1.0;
+            w_max_analysis = 2.5;
+          }
+        }
+
+        // Update the condition to use the dynamically set limits
         if ((is_topology_excl && event->TwoPion_exclusive()) ||
             (is_topology_mProt && event->TwoPion_missingProt()) ||
             (is_topology_mPip && event->TwoPion_missingPip()) ||
             (is_topology_mPim && event->TwoPion_missingPim())) {
-          if (event->W() > 0.0 && event->W() < 5.0 && event->Q2() > 0.0 && event->Q2() < 30.0 && event->weight() > 0.0) {
-            
+          if (event->W() > w_min_analysis && event->W() < w_max_analysis && 
+              event->Q2() > q2_min_analysis && event->Q2() < q2_max_analysis && 
+              event->weight() > 0.0) {
             total_twopion_events++;
+          // }
+        // }
+      // }
+
+        // if ((is_topology_excl && event->TwoPion_exclusive()) ||
+        //     (is_topology_mProt && event->TwoPion_missingProt()) ||
+        //     (is_topology_mPip && event->TwoPion_missingPip()) ||
+        //     (is_topology_mPim && event->TwoPion_missingPim())) {
+        //   if (event->W() > 1.0 && event->W() < 2.5 && event->Q2() > 2.0 && event->Q2() < 30.0 && event->weight() > 0.0) {
+            
+        //     total_twopion_events++;
 
             // ----- Reconstructed data output -----
             csv_data output;
@@ -144,7 +180,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         }
       }
     }
-    
+
     std::cout << "Percent = " << 100.0 * total / num_of_events << std::endl;
     std::cout << " total no of events = " << total << std::endl;
     std::cout << " total no of twopion events = " << total_twopion_events << std::endl;

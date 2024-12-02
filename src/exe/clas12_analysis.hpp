@@ -24,6 +24,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
   float beam_energy = 10.6;  // Default value
   if (getenv("BEAM_E") != NULL) beam_energy = atof(getenv("BEAM_E"));
 
+
+
   // Determine the data processing type (rec or exp) based on output filename
   bool is_rec_data = contains(output_filename, "rec");
   bool is_exp_data = contains(output_filename, "exp");
@@ -33,6 +35,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
   bool is_topology_mProt = contains(output_filename, "mProt");
   bool is_topology_mPip = contains(output_filename, "mPip");
   bool is_topology_mPim = contains(output_filename, "mPim");
+
 
   // Print some information for each thread
   std::cout << "=============== " << RED << "Thread " << thread_id << DEF << " =============== " << BLUE
@@ -90,11 +93,37 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<Histogram>& _hi
       }
     }
 
+    double q2_min_analysis = -1.0, q2_max_analysis = 30.0;
+    double w_min_analysis = 1.0, w_max_analysis = 2.5;
+
+    // Dynamically set W and Q2 limits based on BEAM_E
+    if (getenv("BEAM_E") != NULL) {
+      double beam_energy = atof(getenv("BEAM_E"));
+      if (beam_energy < 3) {
+        q2_max_analysis = 1.0;
+        w_max_analysis = 3.5;
+        w_min_analysis = 0.9;
+      } else if (beam_energy < 11) {
+        q2_min_analysis = 0.0;
+        q2_max_analysis = 12.0;
+        w_min_analysis = 1.0;
+        w_max_analysis = 2.5;
+      } else if (beam_energy < 24) {
+        q2_min_analysis = 2.0;
+        q2_max_analysis = 30.0;
+        w_min_analysis = 1.0;
+        w_max_analysis = 2.5;
+      }
+    }
+
+    // Update the condition to use the dynamically set limits
     if ((is_topology_excl && event->TwoPion_exclusive()) ||
         (is_topology_mProt && event->TwoPion_missingProt()) ||
         (is_topology_mPip && event->TwoPion_missingPip()) ||
         (is_topology_mPim && event->TwoPion_missingPim())) {
-      if (event->W() > 0.0 && event->W() < 5.0 && event->Q2() > 0.0 && event->Q2() < 30.0 && event->weight() > 0.0) {
+      if (event->W() > w_min_analysis && event->W() < w_max_analysis && 
+          event->Q2() > q2_min_analysis && event->Q2() < q2_max_analysis && 
+          event->weight() > 0.0) {
         _hists->Fill_WvsQ2(event, data);
         _hists->Fill_MM2(event, data);
         _hists->Fill_MM2withbins(event);

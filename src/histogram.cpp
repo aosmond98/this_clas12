@@ -30,19 +30,24 @@ Histogram::Histogram(const std::string &output_file)
                 {
                         q2_max = 1.0;
                         w_max = 3.5;
+                        w_min = 0.9;                        
                         p_max = 3.0;
                 }
-                else if (atof(getenv("BEAM_E")) < 8)
+                else if (atof(getenv("BEAM_E")) < 11)
                 {
-                        q2_max = 4.0;
-                        w_max = 4.0;
-                        p_max = 4.0;
+                        q2_min = -1.0;
+                        q2_max = 13.0;
+                        w_min = 0.9;
+                        w_max = 2.6;
+                        p_max = 20.0;
                 }
-                else if (atof(getenv("BEAM_E")) < 9)
+                else if (atof(getenv("BEAM_E")) < 24)
                 {
-                        q2_max = 7.0;
-                        w_max = 7.0;
-                        p_max = 7.0;
+                        q2_min = 1.0;
+                        q2_max = 31.0;
+                        w_min = 0.9;
+                        w_max = 2.6;
+                        p_max = 20.0;
                 }
         }
 
@@ -67,11 +72,11 @@ Histogram::Histogram(const std::string &output_file)
 
         // Set MM² range based on topology
         if (topology == "excl") {
-                mm2_min = -0.5;
-                mm2_max = 0.5;
+                mm2_min = -0.1;
+                mm2_max = 0.1;
         } else if (topology == "mProt") {
-                mm2_min = 0.7;
-                mm2_max = 1.2;
+                mm2_min = 0.0;
+                mm2_max = 2.0;
         } else if (topology == "mPip") {
                 mm2_min = -0.1;
                 mm2_max = 0.1;
@@ -109,25 +114,25 @@ Histogram::Histogram(const std::string &output_file)
         mom_vs_phi = std::make_shared<TH2D>("mom_vs_phi", "mom_vs_phi", bins, p_min, p_max,
                                                 bins, -5, 365);
 
-        W = std::make_shared<TH1D>("W", "W", bins, zero, w_max);
-        Q2 = std::make_shared<TH1D>("Q2", "Q2", bins, zero, q2_max);
-        WvsQ2 = std::make_shared<TH2D>("WvsQ2", "WvsQ2", bins, zero, w_max,
-                                         bins, zero, q2_max);
+        W = std::make_shared<TH1D>("W", "W", bins, w_min, w_max);
+        Q2 = std::make_shared<TH1D>("Q2", "Q2", bins, q2_min, q2_max);
+        WvsQ2 = std::make_shared<TH2D>("WvsQ2", "WvsQ2", bins, w_min, w_max,
+                                         bins, q2_min, q2_max);
 
         MM2 = std::make_shared<TH1D>("MM2", "MM2", bins, mm2_min, mm2_max);
         Mom_vs_MM2 = std::make_shared<TH2D>("Mom_vs_MM2", "Mom_vs_MM2", bins, p_min, p_max,
                                                 bins, mm2_min, mm2_max);
-        W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
+        W_vs_MM2 = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, w_min, w_max,
                                          bins, mm2_min, mm2_max);
 
-        W_mc = std::make_shared<TH1D>("W_mc", "W_mc", bins, zero, w_max);
-        Q2_mc = std::make_shared<TH1D>("Q2_mc", "Q2_mc", bins, zero, q2_max);
-        WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, zero, w_max,
-                                         bins, zero, q2_max);
+        W_mc = std::make_shared<TH1D>("W_mc", "W_mc", bins, w_min, w_max);
+        Q2_mc = std::make_shared<TH1D>("Q2_mc", "Q2_mc", bins, q2_min, q2_max);
+        WvsQ2_mc = std::make_shared<TH2D>("WvsQ2_mc", "WvsQ2_mc", bins, w_min, w_max,
+                                         bins, q2_min, q2_max);
         MM2_mc = std::make_shared<TH1D>("MM2_mc", "MM2_mc", bins, mm2_min, mm2_max);
         Mom_vs_MM2_mc = std::make_shared<TH2D>("Mom_vs_MM2", "Mom_vs_MM2", bins, p_min, p_max,
                                                 bins, mm2_min, mm2_max);
-        W_vs_MM2_mc = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, zero, w_max,
+        W_vs_MM2_mc = std::make_shared<TH2D>("W_vs_MM2", "W_vs_MM2", bins, w_min, w_max,
                                          bins, mm2_min, mm2_max);
 
         makeHists_deltat();
@@ -259,12 +264,13 @@ void Histogram::Write_WvsQ2()
         if (W->GetEntries())
                 W->Write();
 
-        Q2->SetXTitle("Q^{2} (GeV^{2})");
+        Q2->SetXTitle("Q^{2}\u00A0(GeV^{2})");
         if (Q2->GetEntries())
                 Q2->Write();
 
         WvsQ2->SetXTitle("W (GeV)");
-        WvsQ2->SetYTitle("Q2 (GeV^{2})");
+        WvsQ2->SetYTitle("Q^{2}\u00A0(GeV^{2})");
+        WvsQ2->SetTitle("W vs. Q^{2}");
         WvsQ2->SetOption("COLZ1");
         if (WvsQ2->GetEntries())
                 WvsQ2->Write();
@@ -367,11 +373,11 @@ void Histogram::Write_WvsQ2()
         W_can->Write();
 
         auto WvsQ2_can =
-            std::make_unique<TCanvas>("WvsQ2_can", "W vs Q2 sectors", 1920, 1080);
+            std::make_unique<TCanvas>("WvsQ2_can", "W vs. Q^{2}\u00A0Sectors", 1920, 1080);
         WvsQ2_can->Divide(3, 2);
         for (short i = 0; i < num_sectors; i++)
         {
-                WvsQ2_sec[i]->SetYTitle("Q^{2} (GeV^{2})");
+                WvsQ2_sec[i]->SetYTitle("Q^{2}\u00A0(GeV^{2})");
                 WvsQ2_sec[i]->SetXTitle("W (GeV)");
                 WvsQ2_sec[i]->SetOption("COLZ1");
                 WvsQ2_can->cd(i + 1);
@@ -452,12 +458,13 @@ void Histogram::Write_WvsQ2()
         if (W_mc->GetEntries())
                 W_mc->Write();
 
-        Q2_mc->SetXTitle("Q^{2} (GeV^{2})");
+        Q2_mc->SetXTitle("Q^{2}\u00A0(GeV^{2})");
         if (Q2_mc->GetEntries())
                 Q2_mc->Write();
 
         WvsQ2_mc->SetXTitle("W (GeV)");
-        WvsQ2_mc->SetYTitle("Q2 (GeV^{2})");
+        WvsQ2_mc->SetYTitle("Q^{2}\u00A0(GeV^{2})");
+        WvsQ2_mc->SetTitle("W vs. Q^{2}\u00A0mc");
         WvsQ2_mc->SetOption("COLZ1");
         if (WvsQ2_mc->GetEntries())
                 WvsQ2_mc->Write();
@@ -478,12 +485,13 @@ void Histogram::Write_WvsQ2()
         W_mc_can->Write();
 
         auto WvsQ2_mc_can =
-            std::make_unique<TCanvas>("WvsQ2_mc_can", "W vs Q2 mc sectors", 1920, 1080);
+            std::make_unique<TCanvas>("WvsQ2_mc_can", "W vs. Q^{2}\u00A0mc Sectors", 1920, 1080);
         WvsQ2_mc_can->Divide(3, 2);
         for (short i = 0; i < num_sectors; i++)
         {
-                WvsQ2_mc_sec[i]->SetYTitle("Q^{2} (GeV^{2})");
+                WvsQ2_mc_sec[i]->SetYTitle("Q^{2}\u00A0(GeV^{2})");
                 WvsQ2_mc_sec[i]->SetXTitle("W (GeV)");
+                WvsQ2_mc_sec[i]->SetTitle("W vs. Q^{2}\u00A0mc");
                 WvsQ2_mc_sec[i]->SetOption("COLZ1");
                 WvsQ2_mc_can->cd(i + 1);
                 gPad->SetLogz();
@@ -558,13 +566,14 @@ void Histogram::Write_MM2()
         if (MM2->GetEntries())
                 MM2->Write(); 
 
-        W_vs_MM2->SetYTitle("MM^{2} (GeV^{2})");
+        W_vs_MM2->SetYTitle("MM^{2}\u00A0(GeV^{2})");
         W_vs_MM2->SetXTitle("W (GeV)");
+        W_vs_MM2->SetTitle("W vs. MM^{2}");
         // W_vs_MM2->SetOption("COLZ1");
         if (W_vs_MM2->GetEntries())
                 W_vs_MM2->Write();
 
-        Mom_vs_MM2->SetYTitle("MM^{2} (GeV^{2})");
+        Mom_vs_MM2->SetYTitle("MM^{2}\u00A0(GeV^{2})");
         Mom_vs_MM2->SetXTitle("Mom (GeV)");
         // Mom_vs_MM2->SetOption("COLZ1");
         if (Mom_vs_MM2->GetEntries())
@@ -580,13 +589,13 @@ void Histogram::Write_MM2()
         if (MM2_mc->GetEntries())
                 MM2_mc->Write(); 
 
-        W_vs_MM2_mc->SetYTitle("MM^{2}_mc (GeV^{2})");
+        W_vs_MM2_mc->SetYTitle("MM^{2}_mc\u00A0(GeV^{2})");
         W_vs_MM2_mc->SetXTitle("W_mc (GeV)");
         // W_vs_MM2->SetOption("COLZ1");
         if (W_vs_MM2_mc->GetEntries())
                 W_vs_MM2_mc->Write();
 
-        Mom_vs_MM2_mc->SetYTitle("MM^{2}_mc (GeV^{2})");
+        Mom_vs_MM2_mc->SetYTitle("MM^{2}_mc\u00A0(GeV^{2})");
         Mom_vs_MM2_mc->SetXTitle("Mom_mc (GeV)");
         // Mom_vs_MM2->SetOption("COLZ1");
         if (Mom_vs_MM2_mc->GetEntries())
@@ -607,7 +616,7 @@ void Histogram::Write_MM2()
         WvsMM2_can->Divide(3, 2);
         for (short i = 0; i < num_sectors; i++)
         {
-                W_vs_MM2_sec[i]->SetYTitle("MM^{2} (GeV^{2})");
+                W_vs_MM2_sec[i]->SetYTitle("MM^{2}\u00A0(GeV^{2})");
                 W_vs_MM2_sec[i]->SetXTitle("W (GeV)");
                 W_vs_MM2_sec[i]->SetOption("COLZ1");
                 WvsMM2_can->cd(i + 1);
@@ -631,7 +640,7 @@ void Histogram::Write_MM2()
         WvsMM2_mc_can->Divide(3, 2);
         for (short i = 0; i < num_sectors; i++)
         {
-                W_vs_MM2_mc_sec[i]->SetYTitle("MM^{2} (GeV^{2})");
+                W_vs_MM2_mc_sec[i]->SetYTitle("MM^{2}\u00A0(GeV^{2})");
                 W_vs_MM2_mc_sec[i]->SetXTitle("W (GeV)");
                 W_vs_MM2_mc_sec[i]->SetOption("COLZ1");
                 WvsMM2_mc_can->cd(i + 1);
@@ -666,7 +675,7 @@ void Histogram::makeHists_MM2withbins()
 
                         // Use bin edge values for the histogram name
                         oss << "MM2_W[" << w_bin_lower[w_bin] << "-" << w_bin_upper[w_bin]
-                                << ")_Q2[" << q2_bin_lower[q2_bin] << "-" << q2_bin_upper[q2_bin] << ")";
+                                << ")_Q^{2}[" << q2_bin_lower[q2_bin] << "-" << q2_bin_upper[q2_bin] << ")";
 
                         // Convert the output stream to a string
                         std::string hist_name = oss.str();
@@ -718,7 +727,7 @@ void Histogram::Write_MM2withbins(TDirectory *Write_MM2_withbins_folder)
                 {
                         if (MM2_hists[w_bin][q2_bin] && MM2_hists[w_bin][q2_bin]->GetEntries()) 
                         {
-                                MM2_hists[w_bin][q2_bin]->SetXTitle("MM2 (GeV^2)");
+                                MM2_hists[w_bin][q2_bin]->SetXTitle("MM2 (GeV^{2})");
                                 MM2_hists[w_bin][q2_bin]->Write();  // Write the histogram into the subdirectory
                         }
                 }
@@ -731,26 +740,26 @@ void Histogram::makeHists_sector()
         {
                 W_sec[i] =
                     std::make_shared<TH1D>(Form("w_sec_%d", i + 1),
-                                           Form("W Sector: %d", i + 1), bins, zero, w_max);
+                                           Form("W Sector: %d", i + 1), bins, w_min, w_max);
 
                 WvsQ2_sec[i] = std::make_shared<TH2D>(
-                    Form("wvsq2_sec_%d", i + 1), Form("W vs Q^{2} Sector: %d", i + 1), bins,
-                    zero, w_max, bins, zero, q2_max);
+                    Form("wvsq2_sec_%d", i + 1), Form("W vs. Q^{2}\u00A0Sector: %d", i + 1), bins,
+                    w_min, w_max, bins, q2_min, q2_max);
 
                 momvstheta_sec[i] = std::make_shared<TH2D>(
-                    Form("momvstheta_sec%d", i + 1), Form("mom vs theta Sector: %d", i + 1), bins,
+                    Form("momvstheta_sec%d", i + 1), Form("Momentum vs. theta Sector: %d", i + 1), bins,
                     p_min, p_max, bins, zero, 40);
 
                 momvsphi_sec[i] = std::make_shared<TH2D>(
-                    Form("momvsphi_sec%d", i + 1), Form("mom vs phi Sector: %d", i + 1), bins,
+                    Form("momvsphi_sec%d", i + 1), Form("Momentum vs. phi Sector: %d", i + 1), bins,
                     p_min, p_max, bins, zero, 180);
 
                 W_vs_sf_sec[i] = std::make_shared<TH2D>(
-                    Form("W_vs_sf_sec_%d", i + 1), Form("W vs sf Sector: %d", i + 1), bins,
-                    zero, 3.5, bins, 0.15, 0.35);
+                    Form("W_vs_sf_sec_%d", i + 1), Form("W vs. sf Sector: %d", i + 1), bins,
+                    w_min, w_max, bins, 0.15, 0.35);
 
                 momvssf_sec[i] = std::make_shared<TH2D>(
-                    Form("momvssf_sec_%d", i + 1), Form("mom vs sf Sector: %d", i + 1), bins,
+                    Form("momvssf_sec_%d", i + 1), Form("Momentum vs. sf Sector: %d", i + 1), bins,
                     1.0, 10.0, bins, 0.10, 0.35);
 
                 vz_sec[i] =
@@ -759,27 +768,27 @@ void Histogram::makeHists_sector()
 
                 MM2_sec[i] =
                     std::make_shared<TH1D>(Form("mm2_sec_%d", i + 1),
-                                           Form("MM2 Sector: %d", i + 1), bins, -0.04, 0.04);
+                                           Form("MM2 Sector: %d", i + 1), bins, mm2_min, mm2_max);
 
                 W_vs_MM2_sec[i] = std::make_shared<TH2D>(
-                    Form("WvsMM2_sec_%d", i + 1), Form("W vs MM^{2} Sector: %d", i + 1), bins,
-                    p_min, 1, bins, -0.04, 0.04);
+                    Form("WvsMM2_sec_%d", i + 1), Form("W vs. MM^{2}\u00A0Sector: %d", i + 1), bins,
+                    w_min, w_max, bins, mm2_min, mm2_max);
                 
                 W_mc_sec[i] =
                     std::make_shared<TH1D>(Form("w_mc_sec_%d", i + 1),
-                                           Form("W mc Sector: %d", i + 1), bins, zero, w_max);
+                                           Form("W mc Sector: %d", i + 1), bins, w_min, w_max);
 
                 WvsQ2_mc_sec[i] = std::make_shared<TH2D>(
-                    Form("wvsq2_mc_sec_%d", i + 1), Form("W vs Q^{2} mc Sector: %d", i + 1), bins,
-                    zero, w_max, bins, zero, q2_max);
+                    Form("wvsq2_mc_sec_%d", i + 1), Form("W vs. Q^{2}\u00A0mc Sector: %d", i + 1), bins,
+                    w_min, w_max, bins, q2_min, q2_max);
 
                 MM2_mc_sec[i] =
                     std::make_shared<TH1D>(Form("mm2_mc_sec_%d", i + 1),
-                                           Form("MM2_mc Sector: %d", i + 1), bins, -0.04, 0.04);
+                                           Form("MM2_mc Sector: %d", i + 1), bins, mm2_min, mm2_max);
 
                 W_vs_MM2_mc_sec[i] = std::make_shared<TH2D>(
-                    Form("WvsMM2_mc_sec_%d", i + 1), Form("W vs MM^{2} mc Sector: %d", i + 1), bins,
-                    p_min, 1, bins, -0.04, 0.04);
+                    Form("WvsMM2_mc_sec_%d", i + 1), Form("W vs. MM^{2}\u00A0mc Sector: %d", i + 1), bins,
+                    w_min, w_max, bins, mm2_min, mm2_max);
         }
 }
 
@@ -1068,9 +1077,9 @@ void Histogram::makeHists_MomVsMM2()
                                 Mom_vs_MM2_hist[p][c][i] = std::make_shared<TH2D>(
                                     Form("Mom_vs_MM2_%s_%s_%s", particle_name[p].c_str(),
                                          charge_name[c].c_str(), id_name[i].c_str()),
-                                    Form("Momentum vs MM2 %s %s %s", particle_name[p].c_str(),
+                                    Form("Momentum vs. MM2 %s %s %s", particle_name[p].c_str(),
                                          charge_name[c].c_str(), id_name[i].c_str()),
-                                    bins, p_min, p_max, bins, zero, 5.0);
+                                    bins, p_min, p_max, bins, mm2_min, mm2_max);
                                 // Add check to confirm initialization
                                 if (!Mom_vs_MM2_hist[p][c][i]) {
                                         std::cerr << "Failed to initialize histogram for " << particle_name[p] << " " << charge_name[c] << " " << id_name[i] << std::endl;
