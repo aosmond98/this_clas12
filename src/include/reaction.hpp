@@ -77,10 +77,10 @@ class Reaction {
 
   inline float weight() {
     // --- use for sim data ---
-    // return _data->mc_weight(); // / 1e4; // ***** search mc_weight and edit that / 1e4 too
+    return _data->mc_weight(); // / 1e4; // ***** search mc_weight and edit that / 1e4 too
 
     // --- use for exp data ---
-    return 1.0;
+    // return 1.0;
   }
 
   // Check lists when you swich from mc to exp or vice-versa
