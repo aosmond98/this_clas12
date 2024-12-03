@@ -126,6 +126,7 @@ protected:
 
     TH1D_ptr MM2;
     TH2D_ptr W_vs_MM2;
+    TH2D_ptr Q2_vs_MM2;
     TH2D_ptr Mom_vs_MM2;
 
     TH1D_ptr W_mc;
@@ -140,6 +141,7 @@ protected:
     TH2D_ptr WvsQ2_sec[num_sectors];
     TH1D_ptr MM2_sec[num_sectors];
     TH2D_ptr W_vs_MM2_sec[num_sectors];
+    TH2D_ptr Q2_vs_MM2_sec[num_sectors];
 
     TH1D_ptr W_mc_sec[num_sectors];
     TH2D_ptr WvsQ2_mc_sec[num_sectors];
