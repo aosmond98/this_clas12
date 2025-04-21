@@ -70,8 +70,8 @@ protected:
     // double w_bin_lower[w_nBins], w_bin_upper[w_nBins];
     // double q2_bin_lower[q2_nBins], q2_bin_upper[q2_nBins];
 
-    double w_bin_lower[w_nBins] = {1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95};
-    double w_bin_upper[w_nBins] = {1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0};
+    double w_bin_lower[w_nBins] = {1.4, 1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25};
+    double w_bin_upper[w_nBins] = {1.45, 1.5, 1.55, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3};
     double q2_bin_lower[q2_nBins] = {2.0, 2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 21.0, 25.0};
     double q2_bin_upper[q2_nBins] = {2.4, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 11.0, 13.0, 15.0, 18.0, 21.0, 25.0, 30.0};
 
@@ -128,6 +128,8 @@ protected:
     TH2D_ptr W_vs_MM2;
     TH2D_ptr Q2_vs_MM2;
     TH2D_ptr Mom_vs_MM2;
+
+    TH2D_ptr Q2bins_vs_MM2;
 
     TH1D_ptr W_mc;
     TH1D_ptr Q2_mc;
