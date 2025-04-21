@@ -63,7 +63,7 @@ protected:
     // ----- W and Q^2 binning -----
 
     // number of W and Q^2 bins
-    static constexpr int w_nBins = 12; // 25 
+    static constexpr int w_nBins = 18; // 25 
     static constexpr int q2_nBins = 16; // 17
 
     // bin ranges for W and Q^2 (lower and upper edges)
