@@ -718,7 +718,7 @@ void Histogram::makeHists_MM2withbins()
 void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e) {
         double w_val = _e->W();
         double q2_val = _e->Q2();
-        double MM2_val = _e->MM2_mProt();
+        double MM2_val = _e->MM2_mPim();
 
         // Loop over W bins
         for (int w_bin = 0; w_bin < w_nBins; ++w_bin) {
