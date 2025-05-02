@@ -67,25 +67,25 @@ Histogram::Histogram(const std::string &output_file)
         std::string topology = determineTopology(output_file);
 
         // Set default MM² range
-        mm2_min = -0.5;
-        mm2_max = 0.5;
+        mm2_min = -2.0;
+        mm2_max = 5.0;
 
-        // Set MM² range based on topology
-        if (topology == "excl") {
-                mm2_min = -0.1;
-                mm2_max = 0.1;
-        } else if (topology == "mProt") {
-                mm2_min = 0.0;
-                mm2_max = 2.0;
-        } else if (topology == "mPip") {
-                mm2_min = -0.1;
-                mm2_max = 0.1;
-        } else if (topology == "mPim") {
-                mm2_min = -0.1;
-                mm2_max = 0.1;
-        } else {
-                std::cerr << "Warning: Unknown topology detected. Using default MM² range.\n";
-        }
+        // // Set MM² range based on topology
+        // if (topology == "excl") {
+        //         mm2_min = -0.1;
+        //         mm2_max = 0.1;
+        // } else if (topology == "mProt") {
+        //         mm2_min = 0.0;
+        //         mm2_max = 2.0;
+        // } else if (topology == "mPip") {
+        //         mm2_min = -0.1;
+        //         mm2_max = 0.1;
+        // } else if (topology == "mPim") {
+        //         mm2_min = -0.1;
+        //         mm2_max = 0.1;
+        // } else {
+        //         std::cerr << "Warning: Unknown topology detected. Using default MM² range.\n";
+        // }
 
         momentum = std::make_shared<TH1D>("mom", "mom", bins, p_min, p_max);
 
@@ -715,10 +715,26 @@ void Histogram::makeHists_MM2withbins()
         }
 }
 
-void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e) {
+void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e) 
+{
         double w_val = _e->W();
         double q2_val = _e->Q2();
-        double MM2_val = _e->MM2_mPim();
+        double MM2_val = 0.0;
+
+        // Select the MM2 calculation based on topology
+        if (topology == "excl") {
+                MM2_val = _e->MM2_exclusive();
+        } else if (topology == "mProt") {
+                MM2_val = _e->MM2_mProt();
+        } else if (topology == "mPip") {
+                MM2_val = _e->MM2_mPip();
+        } else if (topology == "mPim") {
+                MM2_val = _e->MM2_mPim();
+        }
+
+        // double w_val = _e->W();
+        // double q2_val = _e->Q2();
+        // double MM2_val = _e->MM2_mPim();
 
         // Loop over W bins
         for (int w_bin = 0; w_bin < w_nBins; ++w_bin) {
