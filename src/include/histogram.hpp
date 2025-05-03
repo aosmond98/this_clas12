@@ -54,7 +54,7 @@ protected:
     double w_max = 5.0;
     double zero = 0.0;
 
-    double mm2_min = -2.0;
+    double mm2_min = -5.0;
     double mm2_max = 5.0;
 
     double MM2_val;

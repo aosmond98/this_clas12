@@ -67,7 +67,7 @@ Histogram::Histogram(const std::string &output_file)
         std::string topology = determineTopology(output_file);
 
         // Set default MM² range
-        mm2_min = -2.0;
+        mm2_min = -5.0;
         mm2_max = 5.0;
 
         // // Set MM² range based on topology
