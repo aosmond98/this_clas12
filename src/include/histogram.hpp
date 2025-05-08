@@ -57,6 +57,9 @@ protected:
     double mm2_min = -5.0;
     double mm2_max = 5.0;
 
+    double mm2_min_wide = -5.0;
+    double mm2_max_wide = 5.0;
+
     double MM2_val;
     std::string topology;
 
@@ -151,6 +154,8 @@ protected:
     TH2D_ptr W_vs_MM2_mc_sec[num_sectors];
 
     std::vector<std::vector<TH1D_ptr>> MM2_hists;
+    std::vector<std::vector<TH1D_ptr>> MM2_hists_wide;
+
 
     // TH1D_ptr W_det[3];
     // TH2D_ptr WQ2_det[3];

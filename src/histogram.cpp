@@ -70,22 +70,26 @@ Histogram::Histogram(const std::string &output_file)
         mm2_min = -5.0;
         mm2_max = 5.0;
 
-        // // Set MM² range based on topology
-        // if (topology == "excl") {
-        //         mm2_min = -0.1;
-        //         mm2_max = 0.1;
-        // } else if (topology == "mProt") {
-        //         mm2_min = 0.0;
-        //         mm2_max = 2.0;
-        // } else if (topology == "mPip") {
-        //         mm2_min = -0.1;
-        //         mm2_max = 0.1;
-        // } else if (topology == "mPim") {
-        //         mm2_min = -0.1;
-        //         mm2_max = 0.1;
-        // } else {
-        //         std::cerr << "Warning: Unknown topology detected. Using default MM² range.\n";
-        // }
+        // set wide mm2 range for background purposes
+        mm2_min_wide = -5.0;
+        mm2_max_wide = 5.0;
+
+        // Set MM² range based on topology
+        if (topology == "excl") {
+                mm2_min = -0.02;
+                mm2_max = 0.02;
+        } else if (topology == "mProt") {
+                mm2_min = 0.25;
+                mm2_max = 1.5;
+        } else if (topology == "mPip") {
+                mm2_min = -0.1;
+                mm2_max = 0.1;
+        } else if (topology == "mPim") {
+                mm2_min = -0.1;
+                mm2_max = 0.1;
+        } else {
+                std::cerr << "Warning: Unknown topology detected. Using default MM² range.\n";
+        }
 
         momentum = std::make_shared<TH1D>("mom", "mom", bins, p_min, p_max);
 
@@ -713,6 +717,30 @@ void Histogram::makeHists_MM2withbins()
                         MM2_hists[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, mm2_min, mm2_max);
                 }
         }
+
+        MM2_hists_wide.resize(w_nBins);
+        for (int w_bin = 0; w_bin < w_nBins; ++w_bin) 
+        {
+                MM2_hists_wide[w_bin].resize(q2_nBins);
+                for (int q2_bin = 0; q2_bin < q2_nBins; ++q2_bin) 
+                {
+                        // Create an output string stream
+                        std::ostringstream oss;
+
+                        // Set precision for the output stream
+                        oss << std::setprecision(3) << std::fixed;
+
+                        // Use bin edge values for the histogram name
+                        oss << "MM2_W[" << w_bin_lower[w_bin] << "-" << w_bin_upper[w_bin]
+                                << ")_Q^{2}[" << q2_bin_lower[q2_bin] << "-" << q2_bin_upper[q2_bin] << ")";
+
+                        // Convert the output stream to a string
+                        std::string hist_name = oss.str();
+
+                        // Create the histogram with the new name
+                        MM2_hists_wide[w_bin][q2_bin] = std::make_shared<TH1D>(hist_name.c_str(), hist_name.c_str(), bins, mm2_min_wide, mm2_max_wide);
+                }
+        }
 }
 
 void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e) 
@@ -748,6 +776,9 @@ void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
                                         if (w_bin < MM2_hists.size() && q2_bin < MM2_hists[w_bin].size()) {
                                                 MM2_hists[w_bin][q2_bin]->Fill(MM2_val, _e->weight());
                                         }
+                                        if (w_bin < MM2_hists_wide.size() && q2_bin < MM2_hists_wide[w_bin].size()) {
+                                                MM2_hists_wide[w_bin][q2_bin]->Fill(MM2_val, _e->weight());
+                                        }
                                 }
                         }
                 }
@@ -774,6 +805,23 @@ void Histogram::Write_MM2withbins(TDirectory *Write_MM2_withbins_folder)
                         {
                                 MM2_hists[w_bin][q2_bin]->SetXTitle("MM2 (GeV^{2})");
                                 MM2_hists[w_bin][q2_bin]->Write();  // Write the histogram into the subdirectory
+                        }
+                }
+
+                // Create a subdirectory for each Q² bin based on the lower edge of the bin
+                std::stringstream q2_folder_name_wide;
+                q2_folder_name_wide << "wide_Q2_[" << std::fixed << std::setprecision(3) << q2_bin_lower[q2_bin] << "-" <<
+                        std::fixed << std::setprecision(3) << q2_bin_upper[q2_bin] << ")";
+                TDirectory *q2_dir_wide = Write_MM2_withbins_folder->mkdir(q2_folder_name_wide.str().c_str());
+                q2_dir_wide->cd();  // Change to the Q²-specific subdirectory
+
+                // Loop over each W bin and write the corresponding histogram into the Q² folder
+                for (int w_bin = 0; w_bin < w_nBins; ++w_bin) 
+                {
+                        if (MM2_hists_wide[w_bin][q2_bin] && MM2_hists_wide[w_bin][q2_bin]->GetEntries()) 
+                        {
+                                MM2_hists_wide[w_bin][q2_bin]->SetXTitle("MM2 (GeV^{2})");
+                                MM2_hists_wide[w_bin][q2_bin]->Write();  // Write the histogram into the subdirectory
                         }
                 }
         }
