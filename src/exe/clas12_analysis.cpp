@@ -2,7 +2,8 @@
 #include <thread>
 #include "clas12_analysis.hpp"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) 
+{
   // Need this to make sure root doesn't break
   ROOT::EnableThreadSafety();
 
@@ -34,12 +35,6 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  // Make a set of threads (Futures are special threads which return a value)
-  std::future<size_t> threads[NUM_THREADS];
-
-  // Define events to be used to get Hz later
-  size_t events = 0;
-
   // Make your histograms object as a shared pointer that all the threads will share
   auto hists = std::make_shared<Histogram>(outfilename);
 
@@ -51,8 +46,14 @@ int main(int argc, char** argv) {
     for (auto in : inputs) chain->Add(in.c_str());
 
     // Run the function over each thread, passing the output filename to determine rec/exp
-    return run<Cuts>(std::move(chain), hists, thread_id, outfilename);
+    return run<Pass2_Cuts>(std::move(chain), hists, thread_id, outfilename);
   };
+  
+  // Make a set of threads (Futures are special threads which return a value)
+  std::future<size_t> threads[NUM_THREADS];
+
+  // Define events to be used to get Hz later
+  size_t events = 0;
 
   // Start timer
   auto start = std::chrono::high_resolution_clock::now();

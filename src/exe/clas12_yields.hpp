@@ -31,6 +31,11 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
   bool is_rec_data = contains(output_filename, "rec");
   bool is_exp_data = contains(output_filename, "exp");
 
+  // Ensure only one data type is selected
+  if ((is_gen_data + is_rec_data + is_exp_data) > 1) {
+    throw std::invalid_argument("Output filename must specify exactly one data type: gen, rec, or exp.");
+  }
+
   // Determine the topology based on output filename
   bool is_topology_excl = contains(output_filename, "excl");
   bool is_topology_mProt = contains(output_filename, "mProt");
@@ -101,7 +106,7 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         // Make cuts
         if (is_rec_data && data->mc_npart() < 1) continue;
         auto dt = std::make_shared<Delta_T>(data);
-        auto cuts = std::make_shared<rga_Cuts>(data);
+        auto cuts = std::make_shared<Pass2_Cuts>(data);
         if (!cuts->ElectronCuts()) continue;
         
         total++;  // Increment only if the event is processed with rec cuts

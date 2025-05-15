@@ -96,7 +96,6 @@ void Reaction::SetPip(int i) {
 
 }
 
-
 void Reaction::SetPim(int i) {
   _numPim++;
   _numNeg++;
@@ -409,35 +408,70 @@ float Reaction::prot_Phi_lab_measured() {
     return NAN;
 }
 
+// calculate invariant masses
+void Reaction::invMassPpim(const TLorentzVector &prot, const TLorentzVector &pip)
+{
+  auto delta0 = std::make_unique<TLorentzVector>();
+  auto missingpim_ = std::make_unique<TLorentzVector>();
+  *missingpim_ += *_gamma + *_target - prot - pip;
+  *delta0 += prot + *missingpim_;
+  _inv_Ppim = delta0->M();
+}
+void Reaction::invMasspippim(const TLorentzVector &prot, const TLorentzVector &pip)
+{
+  auto rho0 = std::make_unique<TLorentzVector>();
+  auto missingpim_ = std::make_unique<TLorentzVector>();
+  *missingpim_ += *_gamma + *_target - prot - pip;
+  *rho0 += pip + *missingpim_;
+  _inv_pip_pim = rho0->M();
+}
+void Reaction::invMassPpip(const TLorentzVector &prot, const TLorentzVector &pip)
+{
+  auto deltaPP = std::make_unique<TLorentzVector>();
+  *deltaPP += prot + pip;
+  _inv_Ppip = deltaPP->M();
+}
+
+float Reaction::inv_Ppip()
+{
+  return _inv_Ppip;
+}
+
+float Reaction::inv_Ppim()
+{
+  return _inv_Ppim;
+}
+float Reaction::inv_pip_pim()
+{
+  return _inv_pip_pim;
+}
 
 MCReaction::MCReaction(const std::shared_ptr<Branches12> &data, float beam_energy, const std::string &data_type)
     : Reaction(data, beam_energy, data_type) {
+
   _data = data;
   if (!_data->mc()) _data->mc_branches();
+
   _beam = std::make_unique<TLorentzVector>();
   _beam_energy = beam_energy;
   _weight_mc = _data->mc_weight();
   _beam->SetPxPyPzE(0.0, 0.0, sqrt(_beam_energy * _beam_energy - MASS_E * MASS_E), _beam_energy);
 
-  //_gamma = std::make_unique<TLorentzVector>();  // do i need this?
   _gamma_mc = std::make_unique<TLorentzVector>();
   _target = std::make_unique<TLorentzVector>(0.0, 0.0, 0.0, MASS_P);
-  //_elec = std::make_unique<TLorentzVector>();  // do i need this?
   _elec_mc = std::make_unique<TLorentzVector>();
-  // this->SetElec();  // do i need this?
   this->SetMCElec();
+
   _prot_mc = std::make_unique<TLorentzVector>();
   _pip_mc = std::make_unique<TLorentzVector>();
   _pim_mc = std::make_unique<TLorentzVector>();
-  //_other = std::make_unique<TLorentzVector>();  // do i need this?
   _other_mc = std::make_unique<TLorentzVector>();
   //_neutron = std::make_unique<TLorentzVector>();
 }
 // Reaction::~Reaction() {} // why this is not here
-void MCReaction::SetMCElec() {
-  //  _hasE = true;  //??
+void MCReaction::SetMCElec() 
+{
   _elec_mc->SetXYZM(_data->mc_px(0), _data->mc_py(0), _data->mc_pz(0), MASS_E);
-
   *_gamma_mc += *_beam - *_elec_mc;
 
   // Can calculate W and Q2 here
@@ -450,16 +484,17 @@ void MCReaction::SetMCProton(int i) { _prot_mc->SetXYZM(_data->mc_px(i), _data->
 void MCReaction::SetMCPip(int i) { _pip_mc->SetXYZM(_data->mc_px(i), _data->mc_py(i), _data->mc_pz(i), MASS_PIP); }
 
 void MCReaction::SetMCPim(int i) { _pim_mc->SetXYZM(_data->mc_px(i), _data->mc_py(i), _data->mc_pz(i), MASS_PIM); }
+
 // void MCReaction::SetMCOther(int i) {
 //   _other_mc->SetXYZM(_data->mc_px(i), _data->mc_py(i), _data->mc_pz(i),
 //   mass[_data->pid(i)]);
 // }
+
 float MCReaction::elec_mom_mc_gen() {
   return _elec_mc->P();
-
 }
-float MCReaction::elec_E_mc_gen() { return _elec_mc->E(); }
 
+float MCReaction::elec_E_mc_gen() { return _elec_mc->E(); }
 float MCReaction::elec_theta_mc_gen() { return _elec_mc->Theta() * 180 / PI; }
 float MCReaction::elec_phi_mc_gen() {
   if (_elec_mc->Phi() >= 0)
@@ -488,7 +523,6 @@ float MCReaction::prot_mom_mc_gen() {
   // else
   //   return NAN;
 }
-
 float MCReaction::pim_theta_mc_gen() {
   // if (Reaction::TwoPion_exclusive())
     return _pim_mc->Theta() * 180 / PI;
@@ -533,3 +567,29 @@ float MCReaction::prot_phi_mc_gen() {
     return NAN;
 }
 
+// calculate invariant mass
+float MCReaction::MCinv_Ppip()
+{
+  auto deltaPPMC = std::make_unique<TLorentzVector>();
+  TLorentzVector *prot_mc = _prot_mc.get();
+  TLorentzVector *pip_mc = _pip_mc.get();
+  *deltaPPMC += *prot_mc + *pip_mc;
+  return deltaPPMC->M();
+}
+float MCReaction::MCinv_Ppim()
+{
+  auto delta0MC = std::make_unique<TLorentzVector>();
+  TLorentzVector *prot_mc = _prot_mc.get();
+  TLorentzVector *pim_mc = _pim_mc.get();
+  *delta0MC += *prot_mc;
+  *delta0MC += *pim_mc;
+  return delta0MC->M();
+}
+float MCReaction::MCinv_pip_pim()
+{
+  auto rho0MC = std::make_unique<TLorentzVector>();
+  TLorentzVector *pip_mc = _pip_mc.get();
+  TLorentzVector *pim_mc = _pim_mc.get();
+  *rho0MC += *pip_mc + *pim_mc;
+  return rho0MC->M();
+}
