@@ -209,6 +209,11 @@ struct csv_data {
   float weight_gen;
   float weight_rec;
 
+  float mm2_mPim;
+  float mm2_mPip;
+  float mm2_mProt;
+  float mm2_exclusive_at_zero;
+
   int status_Elec;
   int status_Pim;
   int status_Pip;
@@ -236,7 +241,7 @@ struct csv_data {
       return "event,w_mc,q2_mc,weight";
     } else {
       // ----- Reconstructed -----
-      return "event,w,q2,weight";
+      return "event,w,q2,weight,mm2_mPim,mm2_mPip,mm2_mProt,mm2_excl";
     }
   }
 
@@ -255,6 +260,10 @@ struct csv_data {
       os << data.w << ",";
       os << data.q2 << ",";
       os << data.weight_rec << ",";
+      os << data.mm2_mPim << ",";
+      os << data.mm2_mPip << ",";
+      os << data.mm2_mProt << ",";
+      os << data.mm2_exclusive_at_zero << ",";
     }
 
     return os;
