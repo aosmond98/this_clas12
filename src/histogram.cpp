@@ -67,8 +67,8 @@ Histogram::Histogram(const std::string &output_file)
         std::string topology = determineTopology(output_file);
 
         // Set default MM² range
-        mm2_min = -5.0;
-        mm2_max = 5.0;
+        mm2_min = -0.1;
+        mm2_max = 0.1;
 
         // set wide mm2 range for background purposes
         mm2_min_wide = -5.0;
@@ -722,7 +722,7 @@ void Histogram::Fill_MM2withbins(const std::shared_ptr<Reaction> &_e)
 
         // Select the MM2 calculation based on topology
         if (topology == "excl") {
-                MM2_val = _e->MM2_exclusive();
+                MM2_val = _e->MM2_mPim();
         } else if (topology == "mProt") {
                 MM2_val = _e->MM2_mProt();
         } else if (topology == "mPip") {
