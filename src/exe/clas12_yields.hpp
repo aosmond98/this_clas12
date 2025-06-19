@@ -179,10 +179,26 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
             output.w = event->W();
             output.q2 = event->Q2();
             output.weight_rec = event->weight();
+
             output.mm2_mPim = event->MM2_mPim();
             output.mm2_mPip = event->MM2_mPip();
             output.mm2_mProt = event->MM2_mProt();
-            output.mm2_exclusive_at_zero = event->MM2_exclusive();
+            output.mm2_exclusive = event->MM2_exclusive();
+
+            output.pim_mom_miss = event->pim_momentum();
+            output.pim_mom_meas = event->pim_momentum_measured();
+            output.pip_mom_miss = event->pip_momentum();
+            output.pip_mom_meas = event->pip_momentum_measured();
+            output.prot_mom_miss = event->prot_momentum();
+            output.prot_mom_meas = event->prot_momentum_measured();
+            output.excl_mom = event->Mom_excl();
+
+            output.pim_theta_miss = event->pim_theta_lab();
+            output.pim_theta_meas = event->pim_theta_lab_measured();
+            output.pip_theta_miss = event->pip_theta_lab();
+            output.pip_theta_meas = event->pip_theta_lab_measured();
+            output.prot_theta_miss = event->prot_theta_lab();
+            output.prot_theta_meas = event->prot_theta_lab_measured();
 
             _sync->write(output);
           }

@@ -212,7 +212,22 @@ struct csv_data {
   float mm2_mPim;
   float mm2_mPip;
   float mm2_mProt;
-  float mm2_exclusive_at_zero;
+  float mm2_exclusive;
+
+  float pim_mom_miss;
+  float pim_mom_meas;
+  float pip_mom_miss;
+  float pip_mom_meas;
+  float prot_mom_miss;
+  float prot_mom_meas;
+  float excl_mom;
+
+  float pim_theta_miss;
+  float pim_theta_meas;
+  float pip_theta_miss;
+  float pip_theta_meas;
+  float prot_theta_miss;
+  float prot_theta_meas;
 
   int status_Elec;
   int status_Pim;
@@ -241,7 +256,10 @@ struct csv_data {
       return "event,w_mc,q2_mc,weight";
     } else {
       // ----- Reconstructed -----
-      return "event,w,q2,weight,mm2_mPim,mm2_mPip,mm2_mProt,mm2_excl";
+      return "event,w,q2,weight,"
+                "mm2_mPim,mm2_mPip,mm2_mProt,mm2_excl,"
+                "pim_mom_miss,pim_mom_meas,pip_mom_miss,pip_mom_meas,prot_mom_miss,prot_mom_meas,excl_mom,"
+                "pim_theta_miss,pim_theta_meas,pip_theta_miss,pip_theta_meas,prot_theta_miss,prot_theta_meas";
     }
   }
 
@@ -260,10 +278,26 @@ struct csv_data {
       os << data.w << ",";
       os << data.q2 << ",";
       os << data.weight_rec << ",";
+
       os << data.mm2_mPim << ",";
       os << data.mm2_mPip << ",";
       os << data.mm2_mProt << ",";
-      os << data.mm2_exclusive_at_zero << ",";
+      os << data.mm2_exclusive << ",";
+
+      os << data.pim_mom_miss << ",";
+      os << data.pim_mom_meas << ",";
+      os << data.pip_mom_miss << ",";
+      os << data.pip_mom_meas << ",";
+      os << data.prot_mom_miss << ",";
+      os << data.prot_mom_meas << ",";
+      os << data.excl_mom << ",";
+
+      os << data.pim_theta_miss << ",";
+      os << data.pim_theta_meas << ",";
+      os << data.pip_theta_miss << ",";
+      os << data.pip_theta_meas << ",";
+      os << data.prot_theta_miss << ",";
+      os << data.prot_theta_meas << ",";
     }
 
     return os;
