@@ -456,7 +456,7 @@ bool Pass2_Cuts::CD_fiducial_had(int i)
   // int pid = _data->pid(i);
   //        if (pid == 2212)
   {
-    double momT = sqrt(_data->px(i) * _data->px(i) + _data->py(i) * _data->py(i));
+    double momT = sqrt(_data->px(i) * _data->px(i) + _data->py(i) * _data->py(i)); // transvere momentum
     double theta = atan2(momT, _data->pz(i)) * 180 / PI;
     double phi = atan2(_data->py(i), _data->px(i)) * 180 / PI;
 

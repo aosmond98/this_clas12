@@ -285,6 +285,20 @@ float Reaction::pim_Phi_lab_measured() {
     return NAN;
 }
 
+float Reaction::pim_theta_angle_btwn_P() {
+  if (TwoPion_exclusive() && TwoPion_missingPim()) {
+    auto missingpim_ = std::make_unique<TLorentzVector>();
+    *missingpim_ += *_gamma + *_target - *_prot - *_pip;
+
+    TVector3 p_miss = missingpim_->Vect();
+    TVector3 p_meas = _pim->Vect();
+
+    return p_miss.Angle(p_meas) * 180.0 / PI;
+  } else {
+    return NAN;
+  }
+}
+
 ////////////////mPip
 float Reaction::pip_momentum() {
   if (TwoPion_missingPip()) {
@@ -346,6 +360,21 @@ float Reaction::pip_Phi_lab_measured() {
     return NAN;
 }
 
+float Reaction::pip_theta_angle_btwn_P() {
+  if (TwoPion_exclusive() && TwoPion_missingPip()) {
+    auto missingpip_ = std::make_unique<TLorentzVector>();
+    *missingpip_ += *_gamma + *_target - *_prot - *_pim;
+
+    TVector3 p_miss = missingpip_->Vect();
+    TVector3 p_meas = _pip->Vect();
+
+    return p_miss.Angle(p_meas) * 180.0 / PI;
+  } else {
+    return NAN;
+  }
+}
+
+
 ////////////////mProt
 float Reaction::prot_momentum() {
   if (TwoPion_missingProt()) {
@@ -406,6 +435,20 @@ float Reaction::prot_Phi_lab_measured() {
       return NAN;
   } else
     return NAN;
+}
+
+float Reaction::prot_theta_angle_btwn_P() {
+  if (TwoPion_exclusive() && TwoPion_missingProt()) {
+    auto missingprot_ = std::make_unique<TLorentzVector>();
+    *missingprot_ += *_gamma + *_target - *_pip - *_pim;
+
+    TVector3 p_miss = missingprot_->Vect();
+    TVector3 p_meas = _prot->Vect();
+
+    return p_miss.Angle(p_meas) * 180.0 / PI;
+  } else {
+    return NAN;
+  }
 }
 
 // calculate invariant masses

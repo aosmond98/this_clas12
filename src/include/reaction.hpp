@@ -121,6 +121,7 @@ class Reaction {
   float pim_momentum_measured();
   float pim_theta_lab_measured();
   float pim_Phi_lab_measured();
+  float pim_theta_angle_btwn_P();
 
   // missingPip
   float pip_momentum();
@@ -129,6 +130,7 @@ class Reaction {
   float pip_momentum_measured();
   float pip_theta_lab_measured();
   float pip_Phi_lab_measured();
+  float pip_theta_angle_btwn_P();
 
   // missingProt
   float prot_momentum();
@@ -137,6 +139,7 @@ class Reaction {
   float prot_momentum_measured();
   float prot_theta_lab_measured();
   float prot_Phi_lab_measured();
+  float prot_theta_angle_btwn_P();
 
   void CalcMissMass();
   float MM();

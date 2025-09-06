@@ -229,6 +229,10 @@ struct csv_data {
   float prot_theta_miss;
   float prot_theta_meas;
 
+  float prot_theta_angle_btwn_P;
+  float pip_theta_angle_btwn_P;
+  float pim_theta_angle_btwn_P;
+
   int status_Elec;
   int status_Pim;
   int status_Pip;
@@ -259,7 +263,8 @@ struct csv_data {
       return "event,w,q2,weight,"
                 "mm2_mPim,mm2_mPip,mm2_mProt,mm2_excl,"
                 "pim_mom_miss,pim_mom_meas,pip_mom_miss,pip_mom_meas,prot_mom_miss,prot_mom_meas,excl_mom,"
-                "pim_theta_miss,pim_theta_meas,pip_theta_miss,pip_theta_meas,prot_theta_miss,prot_theta_meas";
+                "pim_theta_miss,pim_theta_meas,pip_theta_miss,pip_theta_meas,prot_theta_miss,prot_theta_meas,"
+                "pim_theta_angle_btwn_P,pip_theta_angle_btwn_P,prot_theta_angle_btwn_P";
     }
   }
 
@@ -298,6 +303,10 @@ struct csv_data {
       os << data.pip_theta_meas << ",";
       os << data.prot_theta_miss << ",";
       os << data.prot_theta_meas << ",";
+
+      os << data.pim_theta_angle_btwn_P << ",";
+      os << data.pip_theta_angle_btwn_P << ",";
+      os << data.prot_theta_angle_btwn_P << ",";
     }
 
     return os;
