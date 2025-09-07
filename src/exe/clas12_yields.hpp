@@ -156,7 +156,8 @@ size_t run(std::shared_ptr<TChain> _chain, const std::shared_ptr<SyncFile>& _syn
         if ((is_topology_excl && event->TwoPion_exclusive()) ||
             (is_topology_mProt && event->TwoPion_missingProt()) ||
             (is_topology_mPip && event->TwoPion_missingPip()) ||
-            (is_topology_mPim && event->TwoPion_missingPim())) {
+            (is_topology_mPim && event->TwoPion_missingPim())
+            ) {
           if (event->W() > w_min_analysis && event->W() < w_max_analysis && 
               event->Q2() > q2_min_analysis && event->Q2() < q2_max_analysis && 
               event->weight() > 0.0) {
